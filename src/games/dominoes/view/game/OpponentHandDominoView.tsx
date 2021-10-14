@@ -25,8 +25,8 @@ export const OpponentHandDominoView = observer((props: IProps) => {
             }}
         >
             <DominoView
-                face1={-1}
-                face2={-1}
+                head={-1}
+                tail={-1}
                 width={(isAcross ? 0.5 : 1) * props.longSideSize}
                 height={(isAcross ? 1 : 0.5) * props.longSideSize}
                 direction={

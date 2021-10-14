@@ -1,11 +1,11 @@
 import React, { useRef } from "react";
 import "./DominoView.css";
-import { Direction } from "enums/Direction";
 import { observer } from "mobx-react-lite";
+import { Direction } from "@games-common/games/dominoes/enums/Direction";
+import { Domino } from "@games-common/games/dominoes/Domino";
 
 interface IProps {
-    face1: number;
-    face2: number;
+    domino: Domino;
     direction: Direction;
     width: number;
     height: number;
@@ -15,13 +15,10 @@ interface IProps {
 export const DominoView = observer((props: IProps) => {
     const dominoContainerRef = useRef<HTMLDivElement>(null);
 
-    const isReversed =
-        props.direction === Direction.WEST ||
-        props.direction === Direction.NORTH;
     const isVertical =
         props.direction === Direction.NORTH ||
         props.direction === Direction.SOUTH;
-    const isHiddenDomino = props.face1 === -1 || props.face2 === -1;
+    const isHiddenDomino = props.domino.head === -1 || props.domino.tail === -1;
     const dominoBackgroundFill = "#F7EEE1";
     const dominoFeatureFill = "#000";
     const shrinkFactor = 0.975;
@@ -122,10 +119,7 @@ export const DominoView = observer((props: IProps) => {
 
                         {!isHiddenDomino && (
                             <>
-                                {getFaceCircles(
-                                    isReversed ? props.face2 : props.face1,
-                                    false
-                                )}
+                                {getFaceCircles(props.domino.head, false)}
 
                                 {isVertical ? (
                                     <line
@@ -146,10 +140,7 @@ export const DominoView = observer((props: IProps) => {
                                         strokeWidth="1.5%"
                                     />
                                 )}
-                                {getFaceCircles(
-                                    isReversed ? props.face1 : props.face2,
-                                    true
-                                )}
+                                {getFaceCircles(props.domino.tail, true)}
                             </>
                         )}
                     </svg>

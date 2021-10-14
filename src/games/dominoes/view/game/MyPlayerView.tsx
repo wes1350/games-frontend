@@ -64,8 +64,8 @@ export const MyPlayerView = observer((props: IProps) => {
                                 onStopDrag={props.onStopDrag}
                             >
                                 <DominoView
-                                    face1={domino.Face1}
-                                    face2={domino.Face2}
+                                    head={domino.Face1}
+                                    tail={domino.Face2}
                                     height={localStore.handHeight}
                                     width={0.5 * localStore.handHeight}
                                     direction={Direction.SOUTH}
