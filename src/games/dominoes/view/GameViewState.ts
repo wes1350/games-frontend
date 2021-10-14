@@ -1,6 +1,10 @@
+import { QueryType } from "@games-common/games/dominoes/enums/QueryType";
+
 export interface GameViewState {
     started: boolean;
-    gameOver: false;
+    winner: string | null;
+    gameOver: boolean;
     logs: string[];
     events: GameEvent[];
+    currentQueryType: QueryType;
 }
