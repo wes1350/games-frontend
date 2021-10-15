@@ -7,7 +7,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { observer, useLocalObservable } from "mobx-react-lite";
 import { action, runInAction } from "mobx";
-import { GameEventRenderer } from "./GameEventRenderer";
+// import { GameEventRenderer } from "./GameEventRenderer";
 import { GameOverDialog } from "./GameOverDialog";
 import { QueryType } from "@games-common/games/dominoes/enums/QueryType";
 import {
@@ -18,7 +18,6 @@ import { Direction } from "@games-common/games/dominoes/enums/Direction";
 import { GameViewState } from "../GameViewState";
 
 interface IProps {
-    gameState: MaskedGameState;
     gameViewState: GameViewState;
     respond: (type: QueryType, value: any) => void;
     onEnterLobby: () => void;
@@ -40,7 +39,9 @@ export const GameView = observer((props: IProps) => {
         window.addEventListener("resize", handleWindowResizeForBoard);
     });
 
-    const me = props.gameState.players[props.gameState.myIndex];
+    const gameState = props.gameViewState.gameState;
+    const me = gameState.players[gameState.myIndex];
+
     return (
         <DndProvider backend={HTML5Backend}>
             <div className="game-view">
@@ -52,7 +53,7 @@ export const GameView = observer((props: IProps) => {
                     }}
                 >
                     <BoardView
-                        board={props.gameState.board}
+                        board={gameState.board}
                         width={localStore.windowWidth * 0.7}
                         height={localStore.windowHeight * 0.7 - 40} // 40 is from header height
                         onDropDomino={(
@@ -71,20 +72,20 @@ export const GameView = observer((props: IProps) => {
                     />
                 </div>
                 <div className={"player-container"}>
-                    {props.gameState.players
+                    {gameState.players
                         .filter((player: MaskedGameStatePlayer) => {
-                            return player.index !== props.gameState.myIndex;
+                            return player.index !== gameState.myIndex;
                         })
                         .map((player: MaskedGameStatePlayer, i: number) => {
                             return (
                                 <OpponentPlayerView
                                     key={i}
-                                    index={props.gameState.SeatToPositionMapping.get(
+                                    index={props.gameViewState.indexToViewPosition.get(
                                         player.index
                                     )}
                                     player={player}
                                     current={
-                                        props.gameState.currentPlayerIndex ===
+                                        gameState.currentPlayerIndex ===
                                         player.index
                                     }
                                     windowWidth={localStore.windowWidth}
@@ -94,14 +95,12 @@ export const GameView = observer((props: IProps) => {
                         })}
                     <MyPlayerView
                         player={me}
-                        current={
-                            props.gameState.currentPlayerIndex === me.index
-                        }
+                        current={gameState.currentPlayerIndex === me.index}
                         onStartDrag={(index: number) => {
                             runInAction(() => {
                                 localStore.dominoBeingDragged =
-                                    props.gameState.players[
-                                        props.gameState.currentPlayerIndex
+                                    gameState.players[
+                                        gameState.currentPlayerIndex
                                     ].hand[index];
                             });
                         }}
@@ -112,17 +111,17 @@ export const GameView = observer((props: IProps) => {
                         }}
                     />
                 </div>
-                <GameEventRenderer
-                    event={props.gameState.CurrentEvent}
+                {/* <GameEventRenderer
+                    event={gameState.CurrentEvent}
                     index={
-                        props.gameState.SeatToPositionMapping.get(
-                            props.gameState.CurrentEvent?.index
+                        gameState.SeatToPositionMapping.get(
+                            gameState.CurrentEvent?.index
                         ) ?? null
                     }
                     clearEvent={action(() => {
-                        props.gameState.ClearEvent();
+                        gameState.ClearEvent();
                     })}
-                />
+                /> */}
                 {props.gameViewState.gameOver && (
                     <GameOverDialog
                         winner={props.gameViewState.winner}
