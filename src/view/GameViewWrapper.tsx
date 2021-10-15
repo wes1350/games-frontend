@@ -2,8 +2,10 @@ import { observer } from "mobx-react-lite";
 import React from "react";
 import _ from "lodash";
 import { GameType } from "@games-common/enums/GameType";
-import { GameView } from "games/dominoes/view/GameView";
+// import { GameView } from "games/dominoes/view/GameView";
 import { GameState as DominoesGameState } from "@games-common/games/dominoes/interfaces/GameState";
+import { GameView } from "games/dominoes/view/game/GameView";
+import { InitializeGameViewState } from "games/dominoes/view/GameViewState";
 
 interface IProps {
     gameType: GameType;
@@ -17,11 +19,13 @@ type RoomParams = {
 };
 
 export const GameViewWrapper = observer((props: IProps) => {
+    // Will need to handle reconnects and reinitialization
+    const gameViewState = InitializeGameViewState(props.gameState);
     return (
         <div className="game-view-wrapper">
             {props.gameType === GameType.DOMINOES ? (
                 <GameView
-                    gameState={props.gameState as DominoesGameState}
+                    gameViewState={gameViewState}
                     respond={props.respond}
                     onEnterLobby={props.onEnterLobby}
                 />

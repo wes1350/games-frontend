@@ -10,12 +10,10 @@ import { action, runInAction } from "mobx";
 // import { GameEventRenderer } from "./GameEventRenderer";
 import { GameOverDialog } from "./GameOverDialog";
 import { QueryType } from "@games-common/games/dominoes/enums/QueryType";
-import {
-    MaskedGameState,
-    MaskedGameStatePlayer
-} from "@games-common/games/dominoes/interfaces/GameState";
+import { MaskedGameState } from "@games-common/games/dominoes/interfaces/GameState";
 import { Direction } from "@games-common/games/dominoes/enums/Direction";
 import { GameViewState } from "../GameViewState";
+import { Player } from "@games-common/games/dominoes/Player";
 
 interface IProps {
     gameViewState: GameViewState;
@@ -73,10 +71,10 @@ export const GameView = observer((props: IProps) => {
                 </div>
                 <div className={"player-container"}>
                     {gameState.players
-                        .filter((player: MaskedGameStatePlayer) => {
+                        .filter((player: Player) => {
                             return player.index !== gameState.myIndex;
                         })
-                        .map((player: MaskedGameStatePlayer, i: number) => {
+                        .map((player: Player, i: number) => {
                             return (
                                 <OpponentPlayerView
                                     key={i}

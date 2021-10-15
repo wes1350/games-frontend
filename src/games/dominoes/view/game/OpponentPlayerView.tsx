@@ -2,12 +2,13 @@ import React, { useRef } from "react";
 import { OpponentHandDominoView } from "./OpponentHandDominoView";
 import { action, runInAction } from "mobx";
 import { observer, useLocalObservable } from "mobx-react-lite";
-import { IPlayer } from "model/PlayerModel";
+// import { IPlayer } from "model/PlayerModel";
 import "./PlayerView.css";
+import { Player } from "@games-common/games/dominoes/Player";
 
 interface IProps {
     index: number;
-    player: IPlayer;
+    player: Player;
     current: boolean;
     windowWidth: number;
     windowHeight: number;
@@ -66,7 +67,7 @@ export const OpponentPlayerView = observer((props: IProps) => {
                 className={`hand-container hand-container-${layoutType}`}
             >
                 <div className={`hand-wrapper hand-wrapper-${layoutType}`}>
-                    {props.player.Hand.map((domino, i) => {
+                    {props.player.hand.map((domino, i) => {
                         return (
                             <div key={i} className={"hand-domino-container"}>
                                 <OpponentHandDominoView
@@ -87,10 +88,10 @@ export const OpponentPlayerView = observer((props: IProps) => {
                 className={`player-details player-details-${layoutType} player-details-${props.index}`}
             >
                 <div className={`player-name player-name-${props.index}`}>
-                    {props.player.Name}
+                    {props.player.name}
                 </div>
                 <div className={`player-score player-score-${props.index}`}>
-                    Score: {props.player.Score}
+                    Score: {props.player.score}
                 </div>
             </div>
         </div>

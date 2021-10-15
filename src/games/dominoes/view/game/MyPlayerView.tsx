@@ -1,14 +1,16 @@
-import { Direction } from "enums/Direction";
+// import { Direction } from "enums/Direction";
+import { Direction } from "@games-common/games/dominoes/enums/Direction";
+import { Player } from "@games-common/games/dominoes/Player";
 import { action, runInAction } from "mobx";
 import { observer, useLocalObservable } from "mobx-react-lite";
-import { IPlayer } from "model/PlayerModel";
+// import { IPlayer } from "model/PlayerModel";
 import React, { useRef } from "react";
 import { DominoView } from "./DominoView";
 import { MyHandDominoView } from "./MyHandDominoView";
 import "./PlayerView.css";
 
 interface IProps {
-    player: IPlayer;
+    player: Player;
     current: boolean;
     onStartDrag: (index: number) => void;
     onStopDrag: () => void;
@@ -49,23 +51,23 @@ export const MyPlayerView = observer((props: IProps) => {
                 className={"hand-container hand-container-horizontal"}
             >
                 <div className="hand-wrapper">
-                    {props.player.Hand.map((domino, i) => {
+                    {props.player.hand.map((domino, i) => {
                         return (
                             <MyHandDominoView
                                 key={i}
                                 index={i}
-                                face1={domino.Face1}
-                                face2={domino.Face2}
-                                playable={props.player.PlayableDominoes?.includes(
-                                    i
-                                )}
+                                face1={domino.head}
+                                face2={domino.tail}
+                                // playable={props.player.PlayableDominoes?.includes(
+                                //     i
+                                // )}
+                                playable={false}
                                 height={localStore.handHeight}
                                 onStartDrag={() => props.onStartDrag(i)}
                                 onStopDrag={props.onStopDrag}
                             >
                                 <DominoView
-                                    head={domino.Face1}
-                                    tail={domino.Face2}
+                                    domino={domino}
                                     height={localStore.handHeight}
                                     width={0.5 * localStore.handHeight}
                                     direction={Direction.SOUTH}
@@ -81,10 +83,10 @@ export const MyPlayerView = observer((props: IProps) => {
                 }
             >
                 <div className={"player-name player-name-me"}>
-                    {props.player.Name}
+                    {props.player.name}
                 </div>
                 <div className={"player-score player-score-me"}>
-                    Score: {props.player.Score}
+                    Score: {props.player.score}
                 </div>
             </div>
         </div>
