@@ -4,8 +4,8 @@ import { observer, useLocalObservable } from "mobx-react-lite";
 import { SocketContext } from "context/SocketContext";
 import { action } from "mobx";
 import { GameMessageType } from "@games-common/games/dominoes/enums/GameMessageType";
-import { GameConfigDescription } from "@games-common/interfaces/GameConfigDescription";
 import { GameType } from "@games-common/enums/GameType";
+import { Config } from "@games-common/games/dominoes/Config";
 
 interface IProps {
     roomId: string;
@@ -27,7 +27,7 @@ export const GameConfigurationView = observer((props: IProps) => {
             handSize: parseInt(localStore.handSize),
             winThreshold: parseInt(localStore.winThreshold),
             check5Doubles: localStore.check5Doubles === "Yes"
-        } as GameConfigDescription;
+        } as Config;
         console.log(config);
         socket.emit(GameMessageType.GAME_START, props.roomId, config);
     };
