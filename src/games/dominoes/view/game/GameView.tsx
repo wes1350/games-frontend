@@ -37,7 +37,7 @@ export const GameView = observer((props: IProps) => {
         window.addEventListener("resize", handleWindowResizeForBoard);
     });
 
-    const gameState = props.gameViewState.gameState;
+    const gameState = props.gameViewState.GameState;
     const me = gameState.players[gameState.myIndex];
 
     return (
@@ -59,7 +59,7 @@ export const GameView = observer((props: IProps) => {
                             direction: Direction
                         ) => {
                             props.respond(
-                                props.gameViewState.currentQueryType,
+                                props.gameViewState.CurrentQueryType,
                                 {
                                     domino: item.index,
                                     direction: direction
@@ -78,7 +78,7 @@ export const GameView = observer((props: IProps) => {
                             return (
                                 <OpponentPlayerView
                                     key={i}
-                                    index={props.gameViewState.indexToViewPosition.get(
+                                    index={props.gameViewState.IndexToViewPosition.get(
                                         player.index
                                     )}
                                     player={player}
@@ -120,9 +120,9 @@ export const GameView = observer((props: IProps) => {
                         gameState.ClearEvent();
                     })}
                 /> */}
-                {props.gameViewState.gameOver && (
+                {props.gameViewState.GameOver && (
                     <GameOverDialog
-                        winner={props.gameViewState.winner}
+                        winner={props.gameViewState.Winner}
                         onEnterLobby={props.onEnterLobby}
                     />
                 )}

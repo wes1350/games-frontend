@@ -26,8 +26,9 @@ import { RoomMessageType } from "@games-common/enums/RoomMessageType";
 import { GameMessageType } from "@games-common/games/dominoes/enums/GameMessageType";
 import { GameStartMessage } from "@games-common/games/dominoes/interfaces/GameStartMessage";
 import { GameType } from "@games-common/enums/GameType";
-import { initializeDominoesGameState } from "games/dominoes/io/SocketListeners";
 import { GameViewWrapper } from "./GameViewWrapper";
+import { GameViewState } from "games/dominoes/view/GameViewState";
+import { MaskedGameState } from "@games-common/games/dominoes/interfaces/GameState";
 
 interface IProps {}
 
@@ -46,7 +47,9 @@ export const RoomView = observer((props: IProps) => {
 
     const localStore = useLocalObservable(() => ({
         gameType: null,
-        gameState: null,
+        // gameState: null, // no need to store gamestate here, refactor
+        gameViewState: null,
+        // gameActive: false,
         roomDetails: null
     }));
 
@@ -78,18 +81,26 @@ export const RoomView = observer((props: IProps) => {
         // Might need to add some sort of socket.offAll() in case of reconnects
         socket.once(
             GameMessageType.GAME_START,
-            (gameType: GameType, gameDetails: GameStartMessage) => {
-                console.log(
-                    `starting game of type ${gameType}, details: ${JSON.stringify(
-                        gameDetails
-                    )}`
-                );
+            // (gameType: GameType, gameDetails: GameStartMessage) => {
+            (gameType: GameType, gameState: MaskedGameState) => {
+                // console.log(
+                //     `starting game of type ${gameType}, details: ${JSON.stringify(
+                //         gameDetails
+                //     )}`
+                // );
                 runInAction(() => {
                     localStore.gameType = gameType;
-                    localStore.gameState = initializeGameState(
-                        gameType,
-                        gameDetails
+
+                    localStore.gameViewState = new GameViewState(
+                        // props.gameState
+                        gameState,
+                        socket
                     );
+                    // localStore.gameActive = true;
+                    // localStore.gameState = initializeGameState(
+                    //     gameType,
+                    //     gameDetails
+                    // );
                 });
                 // addGameplayListeners();
                 history.push(`/room/${roomId}/game`);
@@ -99,22 +110,23 @@ export const RoomView = observer((props: IProps) => {
         );
     };
 
-    const initializeGameState = (
-        gameType: GameType,
-        gameDetails: GameStartMessage
-    ) => {
-        if (gameType === GameType.DOMINOES) {
-            const initializationResult = initializeDominoesGameState(
-                socket,
-                gameDetails
-            );
+    // const initializeGameState = (
+    //     gameType: GameType,
+    //     gameDetails: GameStartMessage
+    // ) => {
+    //     if (gameType === GameType.DOMINOES) {
+    //         // const initializationResult = initializeDominoesGameState(
+    //         //     socket,
+    //         //     gameDetails
+    //         // );
+    //         const initializationResult =
 
-            when(
-                () => localStore.gameState === null,
-                () => initializationResult.removeGameplayListeners(socket)
-            );
-        }
-    };
+    //         // when(
+    //         //     () => localStore.gameState === null,
+    //         //     () => initializationResult.removeGameplayListeners(socket)
+    //         // );
+    //     }
+    // };
 
     // const initializeGameState = (gameDetails: GameStartMessage) => {
     //     const gameConfig = GameConfig.create({
@@ -141,7 +153,9 @@ export const RoomView = observer((props: IProps) => {
     // };
 
     const onReenterLobby = action(() => {
-        localStore.gameState = null;
+        // localStore.gameState = null;
+        // localStore.gameActive = false;
+        localStore.gameViewState = null;
         localStore.roomDetails = null;
         initializeLobby();
     });
@@ -168,11 +182,14 @@ export const RoomView = observer((props: IProps) => {
                         <GameConfigurationView roomId={roomId} />
                     </RoomLobbyView>
                 </Route>
-                {localStore.gameState && (
+                {/* {localStore.gameState && ( */}
+                {/* {localStore.gameActive && ( */}
+                {localStore.gameViewState && (
                     <Route path={gameURL}>
                         <GameViewWrapper
                             gameType={localStore.gameType}
-                            gameState={localStore.gameState}
+                            // gameState={localStore.gameState}
+                            gameViewState={localStore.gameViewState}
                             respond={respondToQuery}
                             onEnterLobby={onReenterLobby}
                         ></GameViewWrapper>

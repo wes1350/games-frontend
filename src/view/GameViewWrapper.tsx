@@ -3,13 +3,15 @@ import React from "react";
 import _ from "lodash";
 import { GameType } from "@games-common/enums/GameType";
 // import { GameView } from "games/dominoes/view/GameView";
-import { GameState as DominoesGameState } from "@games-common/games/dominoes/interfaces/GameState";
 import { GameView } from "games/dominoes/view/game/GameView";
-import { InitializeGameViewState } from "games/dominoes/view/GameViewState";
+import { GameViewState } from "games/dominoes/view/GameViewState";
+import { MaskedGameState } from "@games-common/games/dominoes/interfaces/GameState";
+// import { InitializeGameViewState } from "games/dominoes/view/GameViewState";
 
 interface IProps {
     gameType: GameType;
-    gameState: any;
+    gameViewState: GameViewState;
+    // gameState: MaskedGameState;
     respond: (type: any, value: any) => void;
     onEnterLobby: () => void;
 }
@@ -20,12 +22,13 @@ type RoomParams = {
 
 export const GameViewWrapper = observer((props: IProps) => {
     // Will need to handle reconnects and reinitialization
-    const gameViewState = InitializeGameViewState(props.gameState);
+    // const gameViewState = InitializeGameViewState(props.gameState);
+    // const gameViewState = new GameViewState(props.gameState);
     return (
         <div className="game-view-wrapper">
             {props.gameType === GameType.DOMINOES ? (
                 <GameView
-                    gameViewState={gameViewState}
+                    gameViewState={props.gameViewState}
                     respond={props.respond}
                     onEnterLobby={props.onEnterLobby}
                 />
