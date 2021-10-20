@@ -1,7 +1,10 @@
 import { BoardDomino } from "./BoardDomino";
 import _ from "lodash";
 import { BoundingBox } from "./interfaces/BoundingBox";
-import { rotateDirectionCounterClockwise } from "games/dominoes/utils";
+import {
+    rotateDirectionClockwise,
+    rotateDirectionCounterClockwise
+} from "games/dominoes/utils";
 import {
     Domino,
     Equals,
@@ -27,7 +30,11 @@ const getLengthDisplacementInArm = (arm: Domino[], index: number) => {
 };
 
 const getWidthDisplacementInArm = (domino: Domino) => {
-    return IsDouble(domino) ? 1 : 2;
+    return IsDouble(domino) ? 2 : 1;
+};
+
+const getDominoWidth = (domino: Domino) => {
+    return IsDouble(domino) ? 2 : 4;
 };
 
 export const GetRenderedRepresentation = (board: Board): RenderedBoard => {
@@ -64,42 +71,54 @@ export const GetRenderedRepresentation = (board: Board): RenderedBoard => {
             spinner,
             northArm: board.northArm.map((domino, i) => ({
                 domino,
-                direction: Direction.NORTH,
+                direction: IsDouble(domino) ? Direction.EAST : Direction.NORTH,
                 boundingBox: {
-                    north: -2 - getLengthDisplacementInArm(board.northArm, i),
+                    north:
+                        -2 -
+                        getLengthDisplacementInArm(board.northArm, i) -
+                        getDominoWidth(domino),
                     east: getWidthDisplacementInArm(domino),
-                    south: 2 - getLengthDisplacementInArm(board.northArm, i),
+                    south: -2 - getLengthDisplacementInArm(board.northArm, i),
                     west: -1 * getWidthDisplacementInArm(domino)
                 }
             })),
             eastArm: board.eastArm.map((domino, i) => ({
                 domino,
-                direction: Direction.EAST,
+                direction: IsDouble(domino) ? Direction.SOUTH : Direction.EAST,
                 boundingBox: {
-                    north: getWidthDisplacementInArm(domino),
-                    east: 2 + getLengthDisplacementInArm(board.eastArm, i),
+                    north: -1 * getWidthDisplacementInArm(domino),
+                    east:
+                        1 +
+                        getLengthDisplacementInArm(board.eastArm, i) +
+                        getDominoWidth(domino),
                     south: getWidthDisplacementInArm(domino),
-                    west: -2 + getLengthDisplacementInArm(board.eastArm, i)
+                    west: 1 + getLengthDisplacementInArm(board.eastArm, i)
                 }
             })),
             southArm: board.southArm.map((domino, i) => ({
                 domino,
-                direction: Direction.SOUTH,
+                direction: IsDouble(domino) ? Direction.EAST : Direction.SOUTH,
                 boundingBox: {
-                    north: -2 + getLengthDisplacementInArm(board.southArm, i),
+                    north: 2 + getLengthDisplacementInArm(board.southArm, i),
                     east: getWidthDisplacementInArm(domino),
-                    south: 2 + getLengthDisplacementInArm(board.southArm, i),
+                    south:
+                        2 +
+                        getLengthDisplacementInArm(board.southArm, i) +
+                        getDominoWidth(domino),
                     west: -1 * getWidthDisplacementInArm(domino)
                 }
             })),
             westArm: board.westArm.map((domino, i) => ({
                 domino,
-                direction: Direction.WEST,
+                direction: IsDouble(domino) ? Direction.SOUTH : Direction.WEST,
                 boundingBox: {
-                    north: getWidthDisplacementInArm(domino),
-                    east: 2 - getLengthDisplacementInArm(board.westArm, i),
+                    north: -1 * getWidthDisplacementInArm(domino),
+                    east: -1 - getLengthDisplacementInArm(board.westArm, i),
                     south: getWidthDisplacementInArm(domino),
-                    west: -2 - getLengthDisplacementInArm(board.westArm, i)
+                    west:
+                        -1 -
+                        getLengthDisplacementInArm(board.westArm, i) -
+                        getDominoWidth(domino)
                 }
             })),
             initialRow: null

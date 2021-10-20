@@ -85,7 +85,6 @@ export const BoardView = observer((props: IProps) => {
 
         // i = number of resizings so far
         for (let i = 0; i < 10; i++) {
-            debugger;
             const F = 1 / (6 * i + 24);
 
             const minimumDimension = Math.min(

@@ -119,34 +119,55 @@ export const BoardViewTest = observer((props: IProps) => {
         return { head: arr[0], tail: arr[1] };
     };
 
+    // const board: Board = {
+    //     spinner: null,
+    //     northArm: [],
+    //     eastArm: [],
+    //     southArm: [],
+    //     westArm: [],
+    //     initialRow: [
+    //         [0, 1],
+    //         [1, 4],
+    //         [4, 6],
+    //         [6, 2],
+    //         [2, 1],
+    //         [1, 3],
+    //         [3, 4],
+    //         [4, 5],
+    //         [5, 6],
+    //         [6, 0],
+    //         [0, 1],
+    //         [1, 4],
+    //         [4, 6],
+    //         [6, 2],
+    //         [2, 1],
+    //         [1, 3],
+    //         [3, 4],
+    //         [4, 5],
+    //         [5, 6],
+    //         [6, 0]
+    //     ].map(convertToDomino)
+    // };
+
     const board: Board = {
-        spinner: null,
-        northArm: [],
-        eastArm: [],
-        southArm: [],
-        westArm: [],
-        initialRow: [
-            [0, 1],
-            [1, 4],
-            [4, 6],
-            [6, 2],
+        spinner: convertToDomino([6, 6]),
+        northArm: [].map(convertToDomino),
+        eastArm: [
+            [6, 3],
+            [3, 2],
+            [2, 2],
             [2, 1],
-            [1, 3],
-            [3, 4],
-            [4, 5],
-            [5, 6],
-            [6, 0],
-            [0, 1],
-            [1, 4],
-            [4, 6],
-            [6, 2],
+            [1, 5]
+        ].map(convertToDomino),
+        southArm: [].map(convertToDomino),
+        westArm: [
+            [6, 3],
+            [3, 2],
+            [2, 2],
             [2, 1],
-            [1, 3],
-            [3, 4],
-            [4, 5],
-            [5, 6],
-            [6, 0]
-        ].map(convertToDomino)
+            [1, 5]
+        ].map(convertToDomino),
+        initialRow: null
     };
 
     return (
