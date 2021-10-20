@@ -1,10 +1,14 @@
 import { BoardDomino } from "./BoardDomino";
-import { Board } from "@games-common/games/dominoes/Board";
-import { Direction } from "@games-common/games/dominoes/enums/Direction";
-import { Domino, Equals, IsDouble } from "@games-common/games/dominoes/Domino";
 import _ from "lodash";
 import { BoundingBox } from "./interfaces/BoundingBox";
 import { rotateDirectionCounterClockwise } from "games/dominoes/utils";
+import {
+    Domino,
+    Equals,
+    IsDouble
+} from "../../../../../games-common/src/games/dominoes/Domino";
+import { Board } from "../../../../../games-common/src/games/dominoes/Board";
+import { Direction } from "../../../../../games-common/src/games/dominoes/enums/Direction";
 
 export interface RenderedBoard {
     spinner: BoardDomino | null;

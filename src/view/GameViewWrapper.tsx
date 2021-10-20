@@ -1,11 +1,10 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
 import _ from "lodash";
-import { GameType } from "@games-common/enums/GameType";
 // import { GameView } from "games/dominoes/view/GameView";
 import { GameView } from "games/dominoes/view/game/GameView";
 import { GameViewState } from "games/dominoes/view/GameViewState";
-import { MaskedGameState } from "@games-common/games/dominoes/interfaces/GameState";
+import { GameType } from "../../games-common/src/enums/GameType";
 // import { InitializeGameViewState } from "games/dominoes/view/GameViewState";
 
 interface IProps {

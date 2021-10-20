@@ -26,8 +26,8 @@
         "typescript": "^4.3.5"
     },
     "scripts": {
-        "start": "react-scripts start",
-        "build": "react-scripts build",
+        "start": "react-app-rewired start",
+        "build": "react-app-rewired build",
         "test": "ts-mocha -r ts-node/register -r tsconfig-paths/register --paths test/*.ts",
         "eject": "react-scripts eject"
     },
@@ -53,6 +53,8 @@
         "@types/mocha": "^9.0.0",
         "@types/react-router-dom": "^5.1.8",
         "@types/socket.io-client": "^3.0.0",
+        "react-app-rewire-alias": "^1.1.4",
+        "react-app-rewired": "^2.1.8",
         "ts-mocha": "^8.0.0",
         "ts-node": "^10.2.1",
         "tsconfig-paths": "^3.11.0"

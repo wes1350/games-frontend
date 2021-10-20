@@ -22,13 +22,12 @@ import _ from "lodash";
 import { UserDataContext } from "context/UserDataContext";
 import { SocketContext } from "context/SocketContext";
 import { GameConfigurationView } from "games/dominoes/view/lobby/GameConfigurationView";
-import { RoomMessageType } from "@games-common/enums/RoomMessageType";
-import { GameMessageType } from "@games-common/games/dominoes/enums/GameMessageType";
-import { GameStartMessage } from "@games-common/games/dominoes/interfaces/GameStartMessage";
-import { GameType } from "@games-common/enums/GameType";
 import { GameViewWrapper } from "./GameViewWrapper";
 import { GameViewState } from "games/dominoes/view/GameViewState";
-import { MaskedGameState } from "@games-common/games/dominoes/interfaces/GameState";
+import { RoomMessageType } from "../../games-common/src/enums/RoomMessageType";
+import { GameMessageType } from "../../games-common/src/games/dominoes/enums/GameMessageType";
+import { GameType } from "../../games-common/src/enums/GameType";
+import { MaskedGameState } from "../../games-common/src/games/dominoes/interfaces/GameState";
 
 interface IProps {}
 

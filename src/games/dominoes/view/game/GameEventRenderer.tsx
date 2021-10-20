@@ -1,8 +1,8 @@
 import React from "react";
 import { observer } from "mobx-react-lite";
-import { GameEvent } from "interfaces/GameEvent";
 import "./GameEventRenderer.css";
-import { GameEventType } from "enums/GameEventType";
+import { GameEvent } from "./interfaces/GameEvent";
+import { GameEventType } from "../../../../../games-common/src/games/dominoes/enums/GameEventType";
 
 interface IProps {
     event?: GameEvent;
@@ -15,9 +15,9 @@ export const GameEventRenderer = observer((props: IProps) => {
         if (props.event) {
             setTimeout(() => {
                 props.clearEvent();
-            }, props.event.Duration);
+            }, props.event.duration);
         }
-    }, [props.event?.Id]);
+    }, [props.event?.id]);
 
     const gameEventClass =
         props.index === null
@@ -26,16 +26,16 @@ export const GameEventRenderer = observer((props: IProps) => {
             ? " game-event-me"
             : ` game-event-opponent-${props.index}`;
 
-    const eventType = props.event?.Type;
+    const eventType = props.event?.type;
 
     const gameEventText =
         eventType === GameEventType.SCORE
-            ? `+ ${props.event.Score}`
+            ? `+ ${props.event.score}`
             : eventType === GameEventType.PASS
             ? "Pass"
             : eventType === GameEventType.BLOCKED
             ? "Board blocked"
-            : props.event?.Type;
+            : props.event?.type;
 
     return (
         <div className="game-event-renderer">

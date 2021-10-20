@@ -1,7 +1,7 @@
 import React from "react";
-import { DragItemTypes } from "enums/DragItemTypes";
 import { useDrag } from "react-dnd";
 import { observer } from "mobx-react-lite";
+import { DragItemTypes } from "games/dominoes/enums/DragItemTypes";
 
 interface IProps {
     index: number;

@@ -1,5 +1,5 @@
-import { Domino } from "@games-common/games/dominoes/Domino";
-import { Direction } from "@games-common/games/dominoes/enums/Direction";
+import { Domino } from "../../../../../games-common/src/games/dominoes/Domino";
+import { Direction } from "../../../../../games-common/src/games/dominoes/enums/Direction";
 import { BoundingBox } from "./interfaces/BoundingBox";
 
 export interface BoardDomino {

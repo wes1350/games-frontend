@@ -1,11 +1,10 @@
 import React, { useContext } from "react";
-import "./RoomLobbyView.css";
 import { observer, useLocalObservable } from "mobx-react-lite";
 import { SocketContext } from "context/SocketContext";
 import { action } from "mobx";
-import { GameMessageType } from "@games-common/games/dominoes/enums/GameMessageType";
-import { GameType } from "@games-common/enums/GameType";
-import { Config } from "@games-common/games/dominoes/Config";
+import { GameType } from "../../../../../games-common/src/enums/GameType";
+import { Config } from "../../../../../games-common/src/games/dominoes/Config";
+import { GameMessageType } from "../../../../../games-common/src/games/dominoes/enums/GameMessageType";
 
 interface IProps {
     roomId: string;

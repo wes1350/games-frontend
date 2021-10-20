@@ -1,11 +1,11 @@
 import React, { useRef } from "react";
 import "./DominoView.css";
 import { observer } from "mobx-react-lite";
-import { Direction } from "@games-common/games/dominoes/enums/Direction";
-import { Domino } from "@games-common/games/dominoes/Domino";
+import { Direction } from "../../../../../games-common/src/games/dominoes/enums/Direction";
+import { Domino } from "../../../../../games-common/src/games/dominoes/Domino";
 
 interface IProps {
-    domino: Domino;
+    domino?: Domino;
     direction: Direction;
     width: number;
     height: number;
@@ -18,7 +18,7 @@ export const DominoView = observer((props: IProps) => {
     const isVertical =
         props.direction === Direction.NORTH ||
         props.direction === Direction.SOUTH;
-    const isHiddenDomino = props.domino.head === -1 || props.domino.tail === -1;
+    const isHiddenDomino = !!props.domino;
     const dominoBackgroundFill = "#F7EEE1";
     const dominoFeatureFill = "#000";
     const shrinkFactor = 0.975;

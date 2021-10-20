@@ -4,10 +4,7 @@ import { BoardDominoView } from "./BoardDominoView";
 import { observer } from "mobx-react-lite";
 import _ from "lodash";
 import { useDrop } from "react-dnd";
-import { Direction } from "@games-common/games/dominoes/enums/Direction";
 import { DragItemTypes } from "games/dominoes/enums/DragItemTypes";
-import { Board, BoardIsEmpty } from "@games-common/games/dominoes/Board";
-import { Domino, HasFace } from "@games-common/games/dominoes/Domino";
 import {
     BendDominoesOutsideOfGrid,
     CanPlayVertically,
@@ -28,6 +25,15 @@ import {
     ShiftRenderedBoard
 } from "./RenderedBoard";
 import { BoardDomino } from "./BoardDomino";
+import {
+    Board,
+    BoardIsEmpty
+} from "../../../../../games-common/src/games/dominoes/Board";
+import { Direction } from "../../../../../games-common/src/games/dominoes/enums/Direction";
+import {
+    Domino,
+    HasFace
+} from "../../../../../games-common/src/games/dominoes/Domino";
 
 interface IProps {
     board: Board;

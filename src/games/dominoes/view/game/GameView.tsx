@@ -9,11 +9,10 @@ import { observer, useLocalObservable } from "mobx-react-lite";
 import { action, runInAction } from "mobx";
 // import { GameEventRenderer } from "./GameEventRenderer";
 import { GameOverDialog } from "./GameOverDialog";
-import { QueryType } from "@games-common/games/dominoes/enums/QueryType";
-import { MaskedGameState } from "@games-common/games/dominoes/interfaces/GameState";
-import { Direction } from "@games-common/games/dominoes/enums/Direction";
 import { GameViewState } from "../GameViewState";
-import { Player } from "@games-common/games/dominoes/Player";
+import { QueryType } from "../../../../../games-common/src/games/dominoes/enums/QueryType";
+import { Player } from "../../../../../games-common/src/games/dominoes/Player";
+import { Direction } from "../../../../../games-common/src/games/dominoes/enums/Direction";
 
 interface IProps {
     gameViewState: GameViewState;

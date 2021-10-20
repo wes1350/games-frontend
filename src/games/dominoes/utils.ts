@@ -1,4 +1,4 @@
-import { Direction } from "@games-common/games/dominoes/enums/Direction";
+import { Direction } from "../../../games-common/src/games/dominoes/enums/Direction";
 
 export const rotateDirectionClockwise = (direction: Direction) => {
     return direction === Direction.NORTH

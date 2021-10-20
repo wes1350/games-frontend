@@ -1,4 +1,4 @@
-import { GameEventType } from "@games-common/games/dominoes/enums/GameEventType";
+import { GameEventType } from "../../../../../../games-common/src/games/dominoes/enums/GameEventType";
 
 export interface GameEvent {
     id: number;

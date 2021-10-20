@@ -1,10 +1,10 @@
 // import { Direction } from "enums/Direction";
-import { Direction } from "@games-common/games/dominoes/enums/Direction";
-import { Player } from "@games-common/games/dominoes/Player";
 import { action, runInAction } from "mobx";
 import { observer, useLocalObservable } from "mobx-react-lite";
 // import { IPlayer } from "model/PlayerModel";
 import React, { useRef } from "react";
+import { Direction } from "../../../../../games-common/src/games/dominoes/enums/Direction";
+import { Player } from "../../../../../games-common/src/games/dominoes/Player";
 import { DominoView } from "./DominoView";
 import { MyHandDominoView } from "./MyHandDominoView";
 import "./PlayerView.css";

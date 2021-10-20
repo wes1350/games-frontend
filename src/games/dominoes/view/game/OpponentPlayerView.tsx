@@ -4,7 +4,7 @@ import { action, runInAction } from "mobx";
 import { observer, useLocalObservable } from "mobx-react-lite";
 // import { IPlayer } from "model/PlayerModel";
 import "./PlayerView.css";
-import { Player } from "@games-common/games/dominoes/Player";
+import { Player } from "../../../../../games-common/src/games/dominoes/Player";
 
 interface IProps {
     index: number;

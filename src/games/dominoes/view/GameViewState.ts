@@ -1,11 +1,9 @@
-import { AddDominoToBoard } from "@games-common/games/dominoes/Board";
-import { Domino } from "@games-common/games/dominoes/Domino";
-import { Direction } from "@games-common/games/dominoes/enums/Direction";
-import { GameMessageType } from "@games-common/games/dominoes/enums/GameMessageType";
-import { QueryType } from "@games-common/games/dominoes/enums/QueryType";
-import { GameLogMessage } from "@games-common/games/dominoes/interfaces/GameLogMessage";
-import { GameStartMessage } from "@games-common/games/dominoes/interfaces/GameStartMessage";
-import { MaskedGameState } from "@games-common/games/dominoes/interfaces/GameState";
+import { Domino } from "../../../../games-common/src/games/dominoes/Domino";
+import { Direction } from "../../../../games-common/src/games/dominoes/enums/Direction";
+import { GameMessageType } from "../../../../games-common/src/games/dominoes/enums/GameMessageType";
+import { QueryType } from "../../../../games-common/src/games/dominoes/enums/QueryType";
+import { GameLogMessage } from "../../../../games-common/src/games/dominoes/interfaces/GameLogMessage";
+import { MaskedGameState } from "../../../../games-common/src/games/dominoes/interfaces/GameState";
 import { GameEvent } from "./game/interfaces/GameEvent";
 
 const getIndexToViewPosition = (nPlayers: number, myIndex: number) => {

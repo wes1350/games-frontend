@@ -1,7 +1,7 @@
 import React from "react";
 import { observer } from "mobx-react-lite";
 import { DominoView } from "./DominoView";
-import { Direction } from "enums/Direction";
+import { Direction } from "../../../../../games-common/src/games/dominoes/enums/Direction";
 
 interface IProps {
     playerIndex: number;
@@ -25,8 +25,6 @@ export const OpponentHandDominoView = observer((props: IProps) => {
             }}
         >
             <DominoView
-                head={-1}
-                tail={-1}
                 width={(isAcross ? 0.5 : 1) * props.longSideSize}
                 height={(isAcross ? 1 : 0.5) * props.longSideSize}
                 direction={
