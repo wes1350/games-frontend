@@ -151,7 +151,13 @@ export const BoardViewTest = observer((props: IProps) => {
 
     const board: Board = {
         spinner: convertToDomino([6, 6]),
-        northArm: [].map(convertToDomino),
+        northArm: [
+            [6, 3],
+            [3, 2],
+            [2, 2],
+            [2, 1],
+            [1, 5]
+        ].map(convertToDomino),
         eastArm: [
             [6, 3],
             [3, 2],
@@ -159,7 +165,13 @@ export const BoardViewTest = observer((props: IProps) => {
             [2, 1],
             [1, 5]
         ].map(convertToDomino),
-        southArm: [].map(convertToDomino),
+        southArm: [
+            [6, 3],
+            [3, 2],
+            [2, 2],
+            [2, 1],
+            [1, 5]
+        ].map(convertToDomino),
         westArm: [
             [6, 3],
             [3, 2],

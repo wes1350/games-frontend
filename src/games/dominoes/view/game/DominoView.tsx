@@ -19,6 +19,9 @@ export const DominoView = observer((props: IProps) => {
         props.direction === Direction.NORTH ||
         props.direction === Direction.SOUTH;
     const isHiddenDomino = !props.domino;
+    const reverseDomino =
+        props.direction === Direction.NORTH ||
+        props.direction === Direction.WEST;
     const dominoBackgroundFill = "#F7EEE1";
     const dominoFeatureFill = "#000";
     const shrinkFactor = 0.975;
@@ -119,7 +122,12 @@ export const DominoView = observer((props: IProps) => {
 
                         {!isHiddenDomino && (
                             <>
-                                {getFaceCircles(props.domino.head, false)}
+                                {getFaceCircles(
+                                    reverseDomino
+                                        ? props.domino.tail
+                                        : props.domino.head,
+                                    false
+                                )}
 
                                 {isVertical ? (
                                     <line
@@ -140,7 +148,12 @@ export const DominoView = observer((props: IProps) => {
                                         strokeWidth="1.5%"
                                     />
                                 )}
-                                {getFaceCircles(props.domino.tail, true)}
+                                {getFaceCircles(
+                                    reverseDomino
+                                        ? props.domino.head
+                                        : props.domino.tail,
+                                    true
+                                )}
                             </>
                         )}
                     </svg>

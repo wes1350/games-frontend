@@ -1,10 +1,7 @@
 import { BoardDomino } from "./BoardDomino";
 import _ from "lodash";
 import { BoundingBox } from "./interfaces/BoundingBox";
-import {
-    rotateDirectionClockwise,
-    rotateDirectionCounterClockwise
-} from "games/dominoes/utils";
+import { rotateDirectionClockwise } from "games/dominoes/utils";
 import {
     Domino,
     Equals,
@@ -471,13 +468,13 @@ const bendDominoAroundDomino = (
     );
     return {
         ...dominoToBend,
-        direction: rotateDirectionCounterClockwise(direction),
+        direction: rotateDirectionClockwise(direction),
         boundingBox: bendBoundingBoxAroundPoint(
             dominoToBend.boundingBox,
             coordinatesToBendAround.x,
             coordinatesToBendAround.y,
             direction,
-            IsDouble(dominoToBend.domino)
+            IsDouble(dominoToBendAround.domino)
         )
     };
 };
