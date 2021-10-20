@@ -494,25 +494,15 @@ export const BendDominoesOutsideOfGrid = (
                 gridHeightInSquares
             )
         );
-        const closestEastOutsideGridIndex = board.initialRow
-            .filter(
-                (boardDomino) =>
-                    boardDomino.boundingBox.east >
-                    furthestWestInsideGrid.boundingBox.east
-            )
-            .findIndex(
-                (boardDomino) =>
-                    !boundingBoxFitsInGrid(
-                        boardDomino.boundingBox,
-                        gridWidthInSquares,
-                        gridHeightInSquares
-                    )
+        const furthestEastInsideGrid = board.initialRow
+            .map((_d, i) => board.initialRow[board.initialRow.length - i - 1])
+            .find((boardDomino) =>
+                boundingBoxFitsInGrid(
+                    boardDomino.boundingBox,
+                    gridWidthInSquares,
+                    gridHeightInSquares
+                )
             );
-
-        const furthestEastInsideGrid =
-            closestEastOutsideGridIndex !== -1
-                ? board.initialRow[closestEastOutsideGridIndex - 1]
-                : _.last(board.initialRow);
 
         return {
             ...board,

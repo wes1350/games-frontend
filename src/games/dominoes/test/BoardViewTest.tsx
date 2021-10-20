@@ -11,6 +11,7 @@ import "./BoardViewTest.css";
 import { action } from "mobx";
 import { BoardView } from "../view/game/BoardView";
 import { Board } from "../../../../games-common/src/games/dominoes/Board";
+import { Domino } from "../../../../games-common/src/games/dominoes/Domino";
 
 interface IProps {}
 
@@ -114,13 +115,38 @@ export const BoardViewTest = observer((props: IProps) => {
     //     );
     // });
 
+    const convertToDomino = (arr: number[]): Domino => {
+        return { head: arr[0], tail: arr[1] };
+    };
+
     const board: Board = {
         spinner: null,
         northArm: [],
         eastArm: [],
         southArm: [],
         westArm: [],
-        initialRow: [{ head: 3, tail: 4 }]
+        initialRow: [
+            [0, 1],
+            [1, 4],
+            [4, 6],
+            [6, 2],
+            [2, 1],
+            [1, 3],
+            [3, 4],
+            [4, 5],
+            [5, 6],
+            [6, 0],
+            [0, 1],
+            [1, 4],
+            [4, 6],
+            [6, 2],
+            [2, 1],
+            [1, 3],
+            [3, 4],
+            [4, 5],
+            [5, 6],
+            [6, 0]
+        ].map(convertToDomino)
     };
 
     return (
