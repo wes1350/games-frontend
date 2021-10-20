@@ -1,12 +1,5 @@
-// import { MessageType } from "enums/MessageType";
-// import { QueryType } from "enums/QueryType";
-// import { GameStartMessage } from "interfaces/Messages";
 import { action, runInAction, when } from "mobx";
 import { observer, useLocalObservable } from "mobx-react-lite";
-// import { Board } from "model/BoardModel";
-// import { GameConfig } from "model/GameConfigModel";
-// import { GameState } from "model/GameStateModel";
-// import { Player } from "model/PlayerModel";
 import React, { useContext } from "react";
 import {
     Redirect,
@@ -17,8 +10,6 @@ import {
     useRouteMatch
 } from "react-router-dom";
 import { RoomLobbyView } from "./RoomLobbyView";
-// import { GameView } from "./GameView";
-import _ from "lodash";
 import { UserDataContext } from "context/UserDataContext";
 import { SocketContext } from "context/SocketContext";
 import { GameConfigurationView } from "games/dominoes/view/lobby/GameConfigurationView";

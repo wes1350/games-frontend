@@ -8,33 +8,34 @@ import { SocketContextProvider } from "context/SocketContext";
 import { Header } from "view/Header";
 import { RoomView } from "view/RoomView";
 import { HomePage } from "view/HomePage";
+import { BoardViewTest } from "games/dominoes/test/BoardViewTest";
 
 export const App = observer(() => {
-  return (
-    <div className="App">
-      <UserDataContextProvider>
-        <SocketContextProvider>
-          <Router>
-            <div className="site-container">
-              <Header />
-              <Switch>
-                <Route path="/room/:roomId">
-                  <RoomView />
-                </Route>
-                <Route path="/about">
-                  <AboutPage />
-                </Route>
-                {/* <Route path="/test">
-                  <BoardViewTest />
-                </Route> */}
-                <Route path="/">
-                  <HomePage />
-                </Route>
-              </Switch>
-            </div>
-          </Router>
-        </SocketContextProvider>
-      </UserDataContextProvider>
-    </div>
-  );
+    return (
+        <div className="App">
+            <UserDataContextProvider>
+                <SocketContextProvider>
+                    <Router>
+                        <div className="site-container">
+                            <Header />
+                            <Switch>
+                                <Route path="/room/:roomId">
+                                    <RoomView />
+                                </Route>
+                                <Route path="/about">
+                                    <AboutPage />
+                                </Route>
+                                <Route path="/test">
+                                    <BoardViewTest />
+                                </Route>
+                                <Route path="/">
+                                    <HomePage />
+                                </Route>
+                            </Switch>
+                        </div>
+                    </Router>
+                </SocketContextProvider>
+            </UserDataContextProvider>
+        </div>
+    );
 });

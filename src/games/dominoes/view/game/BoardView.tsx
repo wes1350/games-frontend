@@ -198,8 +198,10 @@ export const BoardView = observer((props: IProps) => {
     const boardDominoes = FlattenRenderedBoard(finalBoard);
 
     const isDroppable = (board: RenderedBoard, domino: BoardDomino) => {
+        return false;
         return (
-            (IsFurthestNorthDomino(board, domino) &&
+            (!!board.spinner &&
+                IsFurthestNorthDomino(board, domino) &&
                 HasFace(
                     props.dominoBeingDragged,
                     _.last(board.northArm).domino.tail
@@ -209,7 +211,8 @@ export const BoardView = observer((props: IProps) => {
                     props.dominoBeingDragged,
                     _.last(board.eastArm).domino.tail
                 )) ||
-            (IsFurthestSouthDomino(board, domino) &&
+            (!!board.spinner &&
+                IsFurthestSouthDomino(board, domino) &&
                 HasFace(
                     props.dominoBeingDragged,
                     _.last(board.southArm).domino.tail

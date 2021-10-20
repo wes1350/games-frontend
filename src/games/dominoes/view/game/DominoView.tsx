@@ -18,7 +18,7 @@ export const DominoView = observer((props: IProps) => {
     const isVertical =
         props.direction === Direction.NORTH ||
         props.direction === Direction.SOUTH;
-    const isHiddenDomino = !!props.domino;
+    const isHiddenDomino = !props.domino;
     const dominoBackgroundFill = "#F7EEE1";
     const dominoFeatureFill = "#000";
     const shrinkFactor = 0.975;

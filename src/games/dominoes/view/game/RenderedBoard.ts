@@ -143,28 +143,36 @@ export const IsFurthestNorthDomino = (
     board: RenderedBoard,
     boardDomino: BoardDomino
 ) => {
-    return Equals(boardDomino.domino, _.last(board.northArm)?.domino);
+    return !!board.spinner
+        ? Equals(boardDomino.domino, _.last(board.northArm)?.domino)
+        : true;
 };
 
 export const IsFurthestEastDomino = (
     board: RenderedBoard,
     boardDomino: BoardDomino
 ) => {
-    return Equals(boardDomino.domino, _.last(board.eastArm)?.domino);
+    return !!board.spinner
+        ? Equals(boardDomino.domino, _.last(board.eastArm)?.domino)
+        : Equals(boardDomino.domino, _.last(board.initialRow).domino);
 };
 
 export const IsFurthestSouthDomino = (
     board: RenderedBoard,
     boardDomino: BoardDomino
 ) => {
-    return Equals(boardDomino.domino, _.last(board.southArm)?.domino);
+    return !!board.spinner
+        ? Equals(boardDomino.domino, _.last(board.southArm)?.domino)
+        : true;
 };
 
 export const IsFurthestWestDomino = (
     board: RenderedBoard,
-    domino: BoardDomino
+    boardDomino: BoardDomino
 ) => {
-    return Equals(domino.domino, _.last(board.westArm)?.domino);
+    return !!board.spinner
+        ? Equals(boardDomino.domino, _.last(board.westArm)?.domino)
+        : Equals(boardDomino.domino, _.first(board.initialRow).domino);
 };
 
 export const ShiftRenderedBoard = (

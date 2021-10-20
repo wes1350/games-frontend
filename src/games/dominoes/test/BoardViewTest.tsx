@@ -9,23 +9,25 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import "./BoardViewTest.css";
 import { action } from "mobx";
+import { BoardView } from "../view/game/BoardView";
+import { Board } from "../../../../games-common/src/games/dominoes/Board";
 
 interface IProps {}
 
 export const BoardViewTest = observer((props: IProps) => {
-    // const localStore = useLocalObservable(() => ({
-    //     width: window.innerWidth,
-    //     height: window.innerHeight
-    // }));
+    const localStore = useLocalObservable(() => ({
+        width: window.innerWidth,
+        height: window.innerHeight
+    }));
 
-    // React.useEffect(() => {
-    //     const handleWindowResizeForBoard = action(() => {
-    //         localStore.width = window.innerWidth;
-    //         localStore.height = window.innerHeight;
-    //     });
+    React.useEffect(() => {
+        const handleWindowResizeForBoard = action(() => {
+            localStore.width = window.innerWidth;
+            localStore.height = window.innerHeight;
+        });
 
-    //     window.addEventListener("resize", handleWindowResizeForBoard);
-    // });
+        window.addEventListener("resize", handleWindowResizeForBoard);
+    });
 
     // const board = Board.create({});
 
@@ -112,20 +114,28 @@ export const BoardViewTest = observer((props: IProps) => {
     //     );
     // });
 
-    return <></>;
-    // return (
-    //     <DndProvider backend={HTML5Backend}>
-    //         <div className={"board-view-test"}>
-    //             <div className={"board-view-test-board-container"}>
-    //                 <BoardView
-    //                     height={localStore.height}
-    //                     width={localStore.width}
-    //                     onDropDomino={() => {}}
-    //                     dominoBeingDragged={null}
-    //                     board={board}
-    //                 />
-    //             </div>
-    //         </div>
-    //     </DndProvider>
-    // );
+    const board: Board = {
+        spinner: null,
+        northArm: [],
+        eastArm: [],
+        southArm: [],
+        westArm: [],
+        initialRow: [{ head: 3, tail: 4 }]
+    };
+
+    return (
+        <DndProvider backend={HTML5Backend}>
+            <div className={"board-view-test"}>
+                <div className={"board-view-test-board-container"}>
+                    <BoardView
+                        height={localStore.height}
+                        width={localStore.width}
+                        onDropDomino={() => {}}
+                        dominoBeingDragged={null}
+                        board={board}
+                    />
+                </div>
+            </div>
+        </DndProvider>
+    );
 });
