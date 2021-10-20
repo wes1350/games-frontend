@@ -15,10 +15,8 @@ import {
     GetRenderedRepresentation,
     GetSouthBoundary,
     GetWestBoundary,
-    IsFurthestEastDomino,
-    IsFurthestNorthDomino,
-    IsFurthestSouthDomino,
-    IsFurthestWestDomino,
+    IsFurthestDominoInArm,
+    IsFurthestDominoInInitialRow,
     MaintainDominoesCloseToSpinnerWithinGrid,
     RenderedBoard,
     ShiftBoardDominoFunction,
@@ -32,6 +30,7 @@ import {
 import { Direction } from "../../../../../games-common/src/games/dominoes/enums/Direction";
 import {
     Domino,
+    Equals,
     HasFace
 } from "../../../../../games-common/src/games/dominoes/Domino";
 
@@ -198,31 +197,67 @@ export const BoardView = observer((props: IProps) => {
     const boardDominoes = FlattenRenderedBoard(finalBoard);
 
     const isDroppable = (board: RenderedBoard, domino: BoardDomino) => {
-        return false;
-        return (
-            (!!board.spinner &&
-                IsFurthestNorthDomino(board, domino) &&
-                HasFace(
+        if (board.spinner) {
+            if (Equals(domino.domino, board.spinner.domino)) {
+                return HasFace(
                     props.dominoBeingDragged,
-                    _.last(board.northArm).domino.tail
-                )) ||
-            (IsFurthestEastDomino(board, domino) &&
-                HasFace(
-                    props.dominoBeingDragged,
-                    _.last(board.eastArm).domino.tail
-                )) ||
-            (!!board.spinner &&
-                IsFurthestSouthDomino(board, domino) &&
-                HasFace(
-                    props.dominoBeingDragged,
-                    _.last(board.southArm).domino.tail
-                )) ||
-            (IsFurthestWestDomino(board, domino) &&
-                HasFace(
-                    props.dominoBeingDragged,
-                    _.last(board.westArm).domino.tail
-                ))
-        );
+                    board.spinner.domino.head
+                );
+            } else {
+                if (
+                    IsFurthestDominoInArm(board, domino, Direction.EAST) &&
+                    HasFace(
+                        props.dominoBeingDragged,
+                        _.last(board.eastArm).domino.tail
+                    )
+                ) {
+                    return true;
+                }
+                if (
+                    IsFurthestDominoInArm(board, domino, Direction.WEST) &&
+                    HasFace(
+                        props.dominoBeingDragged,
+                        _.last(board.westArm).domino.tail
+                    )
+                ) {
+                    return true;
+                }
+                if (
+                    CanPlayVertically(board) &&
+                    IsFurthestDominoInArm(board, domino, Direction.NORTH) &&
+                    HasFace(
+                        props.dominoBeingDragged,
+                        _.last(board.northArm).domino.tail
+                    )
+                ) {
+                    return true;
+                }
+                if (
+                    CanPlayVertically(board) &&
+                    IsFurthestDominoInArm(board, domino, Direction.SOUTH) &&
+                    HasFace(
+                        props.dominoBeingDragged,
+                        _.last(board.southArm).domino.tail
+                    )
+                ) {
+                    return true;
+                }
+                return false;
+            }
+        } else {
+            return (
+                (IsFurthestDominoInInitialRow(board, domino, Direction.EAST) &&
+                    HasFace(
+                        props.dominoBeingDragged,
+                        _.last(board.eastArm).domino.tail
+                    )) ||
+                (IsFurthestDominoInInitialRow(board, domino, Direction.WEST) &&
+                    HasFace(
+                        props.dominoBeingDragged,
+                        _.last(board.westArm).domino.head
+                    ))
+            );
+        }
     };
 
     const determineDropDirectionForDomino = (

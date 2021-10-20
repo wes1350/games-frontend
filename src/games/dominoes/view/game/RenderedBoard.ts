@@ -155,40 +155,42 @@ export const GetWestBoundary = (board: RenderedBoard) => {
     );
 };
 
-export const IsFurthestNorthDomino = (
+export const IsFurthestDominoInArm = (
     board: RenderedBoard,
-    boardDomino: BoardDomino
+    boardDomino: BoardDomino,
+    direction: Direction
 ) => {
-    return !!board.spinner
-        ? Equals(boardDomino.domino, _.last(board.northArm)?.domino)
-        : true;
+    if (board.spinner) {
+        const arm =
+            direction === Direction.NORTH
+                ? board.northArm
+                : direction === Direction.EAST
+                ? board.eastArm
+                : direction === Direction.SOUTH
+                ? board.southArm
+                : board.westArm;
+        if (arm.length === 0) {
+            return false;
+        }
+        return Equals(boardDomino.domino, _.last(arm)?.domino);
+    }
+    return false;
 };
 
-export const IsFurthestEastDomino = (
+export const IsFurthestDominoInInitialRow = (
     board: RenderedBoard,
-    boardDomino: BoardDomino
+    boardDomino: BoardDomino,
+    direction: Direction
 ) => {
-    return !!board.spinner
-        ? Equals(boardDomino.domino, _.last(board.eastArm)?.domino)
-        : Equals(boardDomino.domino, _.last(board.initialRow).domino);
-};
-
-export const IsFurthestSouthDomino = (
-    board: RenderedBoard,
-    boardDomino: BoardDomino
-) => {
-    return !!board.spinner
-        ? Equals(boardDomino.domino, _.last(board.southArm)?.domino)
-        : true;
-};
-
-export const IsFurthestWestDomino = (
-    board: RenderedBoard,
-    boardDomino: BoardDomino
-) => {
-    return !!board.spinner
-        ? Equals(boardDomino.domino, _.last(board.westArm)?.domino)
-        : Equals(boardDomino.domino, _.first(board.initialRow).domino);
+    if (!board.spinner) {
+        return Equals(
+            boardDomino.domino,
+            direction === Direction.WEST
+                ? _.first(board.initialRow).domino
+                : _.last(board.initialRow).domino
+        );
+    }
+    return false;
 };
 
 export const ShiftRenderedBoard = (
