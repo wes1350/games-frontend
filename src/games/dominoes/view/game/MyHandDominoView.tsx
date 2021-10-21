@@ -5,8 +5,6 @@ import { DragItemTypes } from "games/dominoes/enums/DragItemTypes";
 
 interface IProps {
     index: number;
-    face1: number;
-    face2: number;
     playable?: boolean;
     height: number;
     children: any;

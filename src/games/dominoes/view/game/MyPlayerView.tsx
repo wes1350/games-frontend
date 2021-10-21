@@ -3,8 +3,6 @@ import { action, runInAction } from "mobx";
 import { observer, useLocalObservable } from "mobx-react-lite";
 // import { IPlayer } from "model/PlayerModel";
 import React, { useRef } from "react";
-import { VerifyPlacement } from "../../../../../games-common/src/games/dominoes/Board";
-import { Domino } from "../../../../../games-common/src/games/dominoes/Domino";
 import { Direction } from "../../../../../games-common/src/games/dominoes/enums/Direction";
 import { Player } from "../../../../../games-common/src/games/dominoes/Player";
 import { DominoView } from "./DominoView";
@@ -14,7 +12,7 @@ import "./PlayerView.css";
 interface IProps {
     player: Player;
     current: boolean;
-    determineIfPlayable: (domino: Domino) => boolean;
+    playableDominoes: number[];
     onStartDrag: (index: number) => void;
     onStopDrag: () => void;
 }
@@ -59,13 +57,13 @@ export const MyPlayerView = observer((props: IProps) => {
                             <MyHandDominoView
                                 key={i}
                                 index={i}
-                                face1={domino.head}
-                                face2={domino.tail}
                                 // playable={props.player.PlayableDominoes?.includes(
                                 //     i
                                 // )}
-                                // playable={false}
-                                playable={props.determineIfPlayable(domino)}
+                                playable={
+                                    props.current &&
+                                    props.playableDominoes?.includes(i)
+                                }
                                 height={localStore.handHeight}
                                 onStartDrag={() => props.onStartDrag(i)}
                                 onStopDrag={props.onStopDrag}

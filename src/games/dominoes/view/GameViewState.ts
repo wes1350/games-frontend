@@ -13,27 +13,26 @@ import { ScoreMessagePayload } from "../../../../games-common/src/games/dominoes
 import { TurnMessagePayload } from "../../../../games-common/src/games/dominoes/interfaces/TurnMessagePayload";
 import { GameEvent } from "./game/interfaces/GameEvent";
 
-const getIndexToViewPosition = (nPlayers: number, myIndex: number) => {
-    // maps opponent seat number to the display index
-    const playerIndices = new Map<number, number>();
-    playerIndices.set(myIndex, 0);
-    if (nPlayers === 2) {
-        playerIndices.set((myIndex + 1) % nPlayers, 1);
-    } else if (nPlayers === 3) {
-        playerIndices.set((myIndex + 1) % nPlayers, 2);
-        playerIndices.set((myIndex + 2) % nPlayers, 1);
-    } else if (nPlayers === 4) {
-        playerIndices.set((myIndex + 1) % nPlayers, 2);
-        playerIndices.set((myIndex + 2) % nPlayers, 1);
-        playerIndices.set((myIndex + 3) % nPlayers, 3);
-    }
+// const getIndexToViewPosition = (nPlayers: number, myIndex: number) => {
+//     // maps opponent seat number to the display index
+//     const playerIndices = new Map<number, number>();
+//     playerIndices.set(myIndex, 0);
+//     if (nPlayers === 2) {
+//         playerIndices.set((myIndex + 1) % nPlayers, 1);
+//     } else if (nPlayers === 3) {
+//         playerIndices.set((myIndex + 1) % nPlayers, 2);
+//         playerIndices.set((myIndex + 2) % nPlayers, 1);
+//     } else if (nPlayers === 4) {
+//         playerIndices.set((myIndex + 1) % nPlayers, 2);
+//         playerIndices.set((myIndex + 2) % nPlayers, 1);
+//         playerIndices.set((myIndex + 3) % nPlayers, 3);
+//     }
 
-    return playerIndices;
-};
+//     return playerIndices;
+// };
 
 export class GameViewState {
     private gameState: MaskedGameState;
-    private started: boolean;
     private gameOver: boolean;
     private winner: string | null;
     private logs: string[];
@@ -44,26 +43,22 @@ export class GameViewState {
 
     constructor(gameState: MaskedGameState, socket: any) {
         this.gameState = gameState;
-        this.started = false;
         this.gameOver = false;
         this.winner = null;
         this.logs = [];
         this.events = [];
         this.currentQueryType = null;
-        this.indexToViewPosition = getIndexToViewPosition(
-            gameState.config.nPlayers,
-            gameState.me.index
-        );
+        // this.indexToViewPosition = getIndexToViewPosition(
+        //     gameState.config.nPlayers,
+        //     gameState.me.index
+        // );
         this.socket = socket;
+        this.AddGameplayListeners();
         makeAutoObservable(this);
     }
 
     public get GameState() {
         return this.gameState;
-    }
-
-    public get Started() {
-        return this.started;
     }
 
     public get GameOver() {
@@ -87,12 +82,29 @@ export class GameViewState {
     }
 
     public get IndexToViewPosition() {
-        return this.indexToViewPosition;
-    }
+        // return this.indexToViewPosition;
+        // maps opponent seat number to the display index
+        const playerIndices = new Map<number, number>();
+        if (!this.gameState) {
+            return null;
+        }
 
-    public StartGame() {
-        this.started = true;
-        this.AddGameplayListeners();
+        const myIndex = this.gameState.me.index;
+        const nPlayers = this.gameState.config.nPlayers;
+
+        playerIndices.set(myIndex, 0);
+        if (nPlayers === 2) {
+            playerIndices.set((myIndex + 1) % nPlayers, 1);
+        } else if (nPlayers === 3) {
+            playerIndices.set((myIndex + 1) % nPlayers, 2);
+            playerIndices.set((myIndex + 2) % nPlayers, 1);
+        } else if (nPlayers === 4) {
+            playerIndices.set((myIndex + 1) % nPlayers, 2);
+            playerIndices.set((myIndex + 2) % nPlayers, 1);
+            playerIndices.set((myIndex + 3) % nPlayers, 3);
+        }
+
+        return playerIndices;
     }
 
     public RemoveGameplayListeners = () => {

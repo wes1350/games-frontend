@@ -11,13 +11,9 @@ import { action, runInAction } from "mobx";
 import { GameOverDialog } from "./GameOverDialog";
 import { GameViewState } from "../GameViewState";
 import { QueryType } from "../../../../../games-common/src/games/dominoes/enums/QueryType";
-import {
-    Opponent,
-    Player
-} from "../../../../../games-common/src/games/dominoes/Player";
+import { Opponent } from "../../../../../games-common/src/games/dominoes/Player";
 import { Direction } from "../../../../../games-common/src/games/dominoes/enums/Direction";
-import { VerifyPlacement } from "../../../../../games-common/src/games/dominoes/Board";
-import { Domino } from "../../../../../games-common/src/games/dominoes/Domino";
+import { GetValidPlacementsForHand } from "../../../../../games-common/src/games/dominoes/Board";
 import _ from "lodash";
 
 interface IProps {
@@ -43,19 +39,17 @@ export const GameView = observer((props: IProps) => {
     });
 
     const gameState = props.gameViewState.GameState;
+
+    if (!gameState) {
+        return null;
+    }
+
     const me = gameState.me;
 
-    const determineIfPlayable = (domino: Domino) => {
-        return _.some(
-            Object.values(Direction).map((direction) =>
-                VerifyPlacement(
-                    props.gameViewState.GameState.board,
-                    domino,
-                    direction
-                )
-            )
-        );
-    };
+    const playableDominoes = GetValidPlacementsForHand(
+        gameState.board,
+        me.hand
+    ).map((placement) => placement.index);
 
     return (
         <DndProvider backend={HTML5Backend}>
@@ -107,7 +101,7 @@ export const GameView = observer((props: IProps) => {
                     <MyPlayerView
                         player={me}
                         current={gameState.currentPlayerIndex === me.index}
-                        determineIfPlayable={determineIfPlayable}
+                        playableDominoes={playableDominoes}
                         onStartDrag={(index: number) => {
                             runInAction(() => {
                                 localStore.dominoBeingDragged = me.hand[index];

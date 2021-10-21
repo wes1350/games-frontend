@@ -19,6 +19,7 @@ import { RoomMessageType } from "../../games-common/src/enums/RoomMessageType";
 import { GameMessageType } from "../../games-common/src/games/dominoes/enums/GameMessageType";
 import { GameType } from "../../games-common/src/enums/GameType";
 import { MaskedGameState as DominoesMaskedGameState } from "../../games-common/src/games/dominoes/interfaces/GameState";
+import { GameStartMessagePayload } from "../../games-common/src/games/dominoes/interfaces/GameStartMessagePayload";
 
 interface IProps {}
 
@@ -72,19 +73,22 @@ export const RoomView = observer((props: IProps) => {
         socket.once(
             GameMessageType.GAME_START,
             // (gameType: GameType, gameDetails: GameStartMessage) => {
-            (payload: { gameType: GameType; gameState: any }) => {
+            (payload: GameStartMessagePayload) => {
                 // console.log(
                 //     `starting game of type ${gameType}, details: ${JSON.stringify(
                 //         gameDetails
                 //     )}`
                 // );
+                socket.off(RoomMessageType.ROOM_DETAILS, roomDetailsListener);
+
                 runInAction(() => {
                     localStore.gameType = payload.gameType;
 
                     if (localStore.gameType === GameType.DOMINOES) {
                         localStore.gameViewState = new DominoesGameViewState(
                             // props.gameState
-                            payload.gameState as DominoesMaskedGameState,
+                            // payload.gameState,
+                            null,
                             socket
                         );
                     } else {
@@ -100,8 +104,6 @@ export const RoomView = observer((props: IProps) => {
                 });
                 // addGameplayListeners();
                 history.push(`/room/${roomId}/game`);
-
-                socket.off(RoomMessageType.ROOM_DETAILS, roomDetailsListener);
             }
         );
     };
@@ -151,6 +153,7 @@ export const RoomView = observer((props: IProps) => {
     const onReenterLobby = action(() => {
         // localStore.gameState = null;
         // localStore.gameActive = false;
+        localStore.gameType = null;
         localStore.gameViewState = null;
         localStore.roomDetails = null;
         initializeLobby();

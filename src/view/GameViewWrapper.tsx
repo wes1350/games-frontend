@@ -1,12 +1,12 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
-import { GameView } from "games/dominoes/view/game/GameView";
-import { GameViewState } from "games/dominoes/view/GameViewState";
+import { GameView as DominoesGameView } from "games/dominoes/view/game/GameView";
+import { GameViewState as DominoesGameViewState } from "games/dominoes/view/GameViewState";
 import { GameType } from "../../games-common/src/enums/GameType";
 
 interface IProps {
     gameType: GameType;
-    gameViewState: GameViewState;
+    gameViewState: any; // Some sort of GameState dependent on gameType
     // gameState: MaskedGameState;
     respond: (type: any, value: any) => void;
     onEnterLobby: () => void;
@@ -23,12 +23,14 @@ export const GameViewWrapper = observer((props: IProps) => {
     return (
         <div className="game-view-wrapper">
             {props.gameType === GameType.DOMINOES ? (
-                <GameView
+                <DominoesGameView
                     gameViewState={props.gameViewState}
                     respond={props.respond}
                     onEnterLobby={props.onEnterLobby}
                 />
-            ) : null}
+            ) : (
+                <div>invalid game type {props.gameType}</div>
+            )}
         </div>
     );
 });
