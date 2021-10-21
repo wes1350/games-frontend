@@ -21,12 +21,12 @@ export const GameConfigurationView = observer((props: IProps) => {
 
     const onSubmit = (e: any) => {
         e.preventDefault();
-        const config = {
+        const config: Partial<Config> = {
             gameType: GameType.DOMINOES,
             handSize: parseInt(localStore.handSize),
             winThreshold: parseInt(localStore.winThreshold),
             check5Doubles: localStore.check5Doubles === "Yes"
-        } as Config;
+        };
         console.log(config);
         socket.emit(GameMessageType.GAME_START, props.roomId, config);
     };

@@ -14,11 +14,11 @@ import { UserDataContext } from "context/UserDataContext";
 import { SocketContext } from "context/SocketContext";
 import { GameConfigurationView } from "games/dominoes/view/lobby/GameConfigurationView";
 import { GameViewWrapper } from "./GameViewWrapper";
-import { GameViewState } from "games/dominoes/view/GameViewState";
+import { GameViewState as DominoesGameViewState } from "games/dominoes/view/GameViewState";
 import { RoomMessageType } from "../../games-common/src/enums/RoomMessageType";
 import { GameMessageType } from "../../games-common/src/games/dominoes/enums/GameMessageType";
 import { GameType } from "../../games-common/src/enums/GameType";
-import { MaskedGameState } from "../../games-common/src/games/dominoes/interfaces/GameState";
+import { MaskedGameState as DominoesMaskedGameState } from "../../games-common/src/games/dominoes/interfaces/GameState";
 
 interface IProps {}
 
@@ -72,20 +72,26 @@ export const RoomView = observer((props: IProps) => {
         socket.once(
             GameMessageType.GAME_START,
             // (gameType: GameType, gameDetails: GameStartMessage) => {
-            (gameType: GameType, gameState: MaskedGameState) => {
+            (payload: { gameType: GameType; gameState: any }) => {
                 // console.log(
                 //     `starting game of type ${gameType}, details: ${JSON.stringify(
                 //         gameDetails
                 //     )}`
                 // );
                 runInAction(() => {
-                    localStore.gameType = gameType;
+                    localStore.gameType = payload.gameType;
 
-                    localStore.gameViewState = new GameViewState(
-                        // props.gameState
-                        gameState,
-                        socket
-                    );
+                    if (localStore.gameType === GameType.DOMINOES) {
+                        localStore.gameViewState = new DominoesGameViewState(
+                            // props.gameState
+                            payload.gameState as DominoesMaskedGameState,
+                            socket
+                        );
+                    } else {
+                        throw new Error(
+                            `Invalid game type: ${localStore.gameType}`
+                        );
+                    }
                     // localStore.gameActive = true;
                     // localStore.gameState = initializeGameState(
                     //     gameType,

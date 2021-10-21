@@ -11,7 +11,10 @@ import { action, runInAction } from "mobx";
 import { GameOverDialog } from "./GameOverDialog";
 import { GameViewState } from "../GameViewState";
 import { QueryType } from "../../../../../games-common/src/games/dominoes/enums/QueryType";
-import { Player } from "../../../../../games-common/src/games/dominoes/Player";
+import {
+    Opponent,
+    Player
+} from "../../../../../games-common/src/games/dominoes/Player";
 import { Direction } from "../../../../../games-common/src/games/dominoes/enums/Direction";
 
 interface IProps {
@@ -37,7 +40,7 @@ export const GameView = observer((props: IProps) => {
     });
 
     const gameState = props.gameViewState.GameState;
-    const me = gameState.players[gameState.myIndex];
+    const me = gameState.me;
 
     return (
         <DndProvider backend={HTML5Backend}>
@@ -69,36 +72,29 @@ export const GameView = observer((props: IProps) => {
                     />
                 </div>
                 <div className={"player-container"}>
-                    {gameState.players
-                        .filter((player: Player) => {
-                            return player.index !== gameState.myIndex;
-                        })
-                        .map((player: Player, i: number) => {
-                            return (
-                                <OpponentPlayerView
-                                    key={i}
-                                    index={props.gameViewState.IndexToViewPosition.get(
-                                        player.index
-                                    )}
-                                    player={player}
-                                    current={
-                                        gameState.currentPlayerIndex ===
-                                        player.index
-                                    }
-                                    windowWidth={localStore.windowWidth}
-                                    windowHeight={localStore.windowHeight}
-                                />
-                            );
-                        })}
+                    {gameState.opponents.map((player: Opponent, i: number) => {
+                        return (
+                            <OpponentPlayerView
+                                key={i}
+                                index={props.gameViewState.IndexToViewPosition.get(
+                                    player.index
+                                )}
+                                player={player}
+                                current={
+                                    gameState.currentPlayerIndex ===
+                                    player.index
+                                }
+                                windowWidth={localStore.windowWidth}
+                                windowHeight={localStore.windowHeight}
+                            />
+                        );
+                    })}
                     <MyPlayerView
                         player={me}
                         current={gameState.currentPlayerIndex === me.index}
                         onStartDrag={(index: number) => {
                             runInAction(() => {
-                                localStore.dominoBeingDragged =
-                                    gameState.players[
-                                        gameState.currentPlayerIndex
-                                    ].hand[index];
+                                localStore.dominoBeingDragged = me.hand[index];
                             });
                         }}
                         onStopDrag={() => {

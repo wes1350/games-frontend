@@ -1,3 +1,4 @@
+import { makeAutoObservable } from "mobx";
 import { Domino } from "../../../../games-common/src/games/dominoes/Domino";
 import { Direction } from "../../../../games-common/src/games/dominoes/enums/Direction";
 import { GameMessageType } from "../../../../games-common/src/games/dominoes/enums/GameMessageType";
@@ -36,7 +37,6 @@ export class GameViewState {
     private socket: any;
 
     constructor(gameState: MaskedGameState, socket: any) {
-        // Use mobx makeAutoObservable
         this.gameState = gameState;
         this.started = false;
         this.gameOver = false;
@@ -46,9 +46,10 @@ export class GameViewState {
         this.currentQueryType = null;
         this.indexToViewPosition = getIndexToViewPosition(
             gameState.config.nPlayers,
-            gameState.myIndex
+            gameState.me.index
         );
         this.socket = socket;
+        makeAutoObservable(this);
     }
 
     public get GameState() {
