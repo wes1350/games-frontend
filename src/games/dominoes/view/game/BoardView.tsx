@@ -197,6 +197,10 @@ export const BoardView = observer((props: IProps) => {
     const boardDominoes = FlattenRenderedBoard(finalBoard);
 
     const isDroppable = (board: RenderedBoard, domino: BoardDomino) => {
+        if (!props.dominoBeingDragged) {
+            return false;
+        }
+
         if (board.spinner) {
             if (Equals(domino.domino, board.spinner.domino)) {
                 return HasFace(

@@ -48,8 +48,11 @@ export const GameView = observer((props: IProps) => {
 
     const playableDominoes = GetValidPlacementsForHand(
         gameState.board,
-        me.hand
-    ).map((placement) => placement.index);
+        me.hand,
+        gameState.fresh
+    )
+        .filter((placement) => placement.dirs.length > 0)
+        .map((placement) => placement.index);
 
     return (
         <DndProvider backend={HTML5Backend}>
