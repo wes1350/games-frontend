@@ -13,24 +13,6 @@ import { ScoreMessagePayload } from "../../../../games-common/src/games/dominoes
 import { TurnMessagePayload } from "../../../../games-common/src/games/dominoes/interfaces/TurnMessagePayload";
 import { GameEvent } from "./game/interfaces/GameEvent";
 
-// const getIndexToViewPosition = (nPlayers: number, myIndex: number) => {
-//     // maps opponent seat number to the display index
-//     const playerIndices = new Map<number, number>();
-//     playerIndices.set(myIndex, 0);
-//     if (nPlayers === 2) {
-//         playerIndices.set((myIndex + 1) % nPlayers, 1);
-//     } else if (nPlayers === 3) {
-//         playerIndices.set((myIndex + 1) % nPlayers, 2);
-//         playerIndices.set((myIndex + 2) % nPlayers, 1);
-//     } else if (nPlayers === 4) {
-//         playerIndices.set((myIndex + 1) % nPlayers, 2);
-//         playerIndices.set((myIndex + 2) % nPlayers, 1);
-//         playerIndices.set((myIndex + 3) % nPlayers, 3);
-//     }
-
-//     return playerIndices;
-// };
-
 export class GameViewState {
     private gameState: MaskedGameState;
     private gameOver: boolean;
@@ -38,7 +20,6 @@ export class GameViewState {
     private logs: string[];
     private events: GameEvent[];
     private currentQueryType: QueryType | null;
-    private indexToViewPosition: Map<number, number>;
     private socket: any;
 
     constructor(gameState: MaskedGameState, socket: any) {
@@ -48,10 +29,6 @@ export class GameViewState {
         this.logs = [];
         this.events = [];
         this.currentQueryType = null;
-        // this.indexToViewPosition = getIndexToViewPosition(
-        //     gameState.config.nPlayers,
-        //     gameState.me.index
-        // );
         this.socket = socket;
         this.AddGameplayListeners();
         makeAutoObservable(this);
@@ -82,7 +59,6 @@ export class GameViewState {
     }
 
     public get IndexToViewPosition() {
-        // return this.indexToViewPosition;
         // maps opponent seat number to the display index
         const playerIndices = new Map<number, number>();
         if (!this.gameState) {
