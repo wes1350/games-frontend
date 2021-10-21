@@ -16,6 +16,9 @@ import {
     Player
 } from "../../../../../games-common/src/games/dominoes/Player";
 import { Direction } from "../../../../../games-common/src/games/dominoes/enums/Direction";
+import { VerifyPlacement } from "../../../../../games-common/src/games/dominoes/Board";
+import { Domino } from "../../../../../games-common/src/games/dominoes/Domino";
+import _ from "lodash";
 
 interface IProps {
     gameViewState: GameViewState;
@@ -41,6 +44,18 @@ export const GameView = observer((props: IProps) => {
 
     const gameState = props.gameViewState.GameState;
     const me = gameState.me;
+
+    const determineIfPlayable = (domino: Domino) => {
+        return _.some(
+            Object.values(Direction).map((direction) =>
+                VerifyPlacement(
+                    props.gameViewState.GameState.board,
+                    domino,
+                    direction
+                )
+            )
+        );
+    };
 
     return (
         <DndProvider backend={HTML5Backend}>
@@ -92,6 +107,7 @@ export const GameView = observer((props: IProps) => {
                     <MyPlayerView
                         player={me}
                         current={gameState.currentPlayerIndex === me.index}
+                        determineIfPlayable={determineIfPlayable}
                         onStartDrag={(index: number) => {
                             runInAction(() => {
                                 localStore.dominoBeingDragged = me.hand[index];

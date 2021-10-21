@@ -3,8 +3,14 @@ import { Domino } from "../../../../games-common/src/games/dominoes/Domino";
 import { Direction } from "../../../../games-common/src/games/dominoes/enums/Direction";
 import { GameMessageType } from "../../../../games-common/src/games/dominoes/enums/GameMessageType";
 import { QueryType } from "../../../../games-common/src/games/dominoes/enums/QueryType";
+import { BlockedMessagePayload } from "../../../../games-common/src/games/dominoes/interfaces/BlockedMessagePayload";
 import { GameLogMessage } from "../../../../games-common/src/games/dominoes/interfaces/GameLogMessage";
 import { MaskedGameState } from "../../../../games-common/src/games/dominoes/interfaces/GameState";
+import { HandMessagePayload } from "../../../../games-common/src/games/dominoes/interfaces/HandMessagePayload";
+import { NewRoundMessagePayload } from "../../../../games-common/src/games/dominoes/interfaces/NewRoundMessagePayload";
+import { PullMessagePayload } from "../../../../games-common/src/games/dominoes/interfaces/PullMessagePayload";
+import { ScoreMessagePayload } from "../../../../games-common/src/games/dominoes/interfaces/ScoreMessagePayload";
+import { TurnMessagePayload } from "../../../../games-common/src/games/dominoes/interfaces/TurnMessagePayload";
 import { GameEvent } from "./game/interfaces/GameEvent";
 
 const getIndexToViewPosition = (nPlayers: number, myIndex: number) => {
@@ -145,15 +151,10 @@ export class GameViewState {
     };
 
     private onTurn = (
-        gameState: MaskedGameState,
-        turnDescription: {
-            // Just for visual notifications
-            index: number;
-            domino: Domino;
-            direction: Direction;
-        }
+        // gameState: MaskedGameState,
+        payload: TurnMessagePayload
     ) => {
-        this.UpdateGameState(gameState);
+        this.UpdateGameState(payload.gameState);
 
         // if (!domino) {
         //     gameViewState.AddEvent({
@@ -166,10 +167,10 @@ export class GameViewState {
     };
 
     private onScore = (
-        gameState: MaskedGameState,
-        payload: { seat: number; score: number }
+        // gameState: MaskedGameState,
+        payload: ScoreMessagePayload
     ) => {
-        this.UpdateGameState(gameState);
+        this.UpdateGameState(payload.gameState);
         // gameViewState.AddEvent({
         //     Id: Math.floor(Math.random() * 10000000),
         //     Type: GameEventType.SCORE,
@@ -182,10 +183,10 @@ export class GameViewState {
     };
 
     private onHand = (
-        gameState: MaskedGameState,
-        payload: { Face1: number; Face2: number }[]
+        // gameState: MaskedGameState,
+        payload: HandMessagePayload // { Face1: number; Face2: number }[]
     ) => {
-        this.UpdateGameState(gameState);
+        this.UpdateGameState(payload.gameState);
         // when(
         //     () => gameState.Events.length === 0,
         //     () => {
@@ -195,23 +196,23 @@ export class GameViewState {
     };
 
     private onPull = (
-        gameState: MaskedGameState,
-        payload: { index: number }
+        // gameState: MaskedGameState,
+        payload: PullMessagePayload
     ) => {
         // const player = gameState.PlayerAtSeat(payload.seat);
         // const player = gameState.players[payload.index]
         // if (player.index !== gameState.) {
         //     player.AddDomino(Domino.create({ Face1: -1, Face2: -1 }));
         // }
-        this.UpdateGameState(gameState);
+        this.UpdateGameState(payload.gameState);
     };
 
     private onNewRound = (
-        gameState: MaskedGameState,
+        // gameState: MaskedGameState,
         // payload: NewRoundMessage
-        payload: any
+        payload: NewRoundMessagePayload
     ) => {
-        this.UpdateGameState(gameState);
+        this.UpdateGameState(payload.gameState);
         // when(
         //     () => gameState.Events.length === 0,
         //     () => {
@@ -221,14 +222,13 @@ export class GameViewState {
         // );
     };
 
-    private onMoveQuery = (gameState: MaskedGameState, message: string) => {
-        this.UpdateGameState(gameState);
+    private onMoveQuery = () => {
         this.SetQueryType(QueryType.MOVE);
         // gameState.SetQueryType(QueryType.MOVE);
     };
 
-    private onGameBlocked = (gameState: MaskedGameState) => {
-        this.UpdateGameState(gameState);
+    private onGameBlocked = (payload: BlockedMessagePayload) => {
+        this.UpdateGameState(payload.gameState);
         // gameState.AddEvent({
         //     Id: generateId(),
         //     Type: GameEventType.BLOCKED,
