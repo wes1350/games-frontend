@@ -110,11 +110,9 @@ export const GameView = observer((props: IProps) => {
                                 localStore.dominoBeingDragged = me.hand[index];
                             });
                         }}
-                        onStopDrag={() => {
-                            runInAction(() => {
-                                localStore.dominoBeingDragged = null;
-                            });
-                        }}
+                        onStopDrag={action(() => {
+                            localStore.dominoBeingDragged = null;
+                        })}
                     />
                 </div>
                 {/* <GameEventRenderer

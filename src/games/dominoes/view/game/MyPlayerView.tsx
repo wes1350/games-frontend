@@ -59,7 +59,8 @@ export const MyPlayerView = observer((props: IProps) => {
                                 index={i}
                                 // playable={props.player.PlayableDominoes?.includes(
                                 //     i
-                                // )}
+                                // )};
+                                domino={domino}
                                 playable={
                                     props.current &&
                                     props.playableDominoes?.includes(i)

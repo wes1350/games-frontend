@@ -43,20 +43,23 @@ interface IProps {
 }
 
 export const BoardView = observer((props: IProps) => {
-    const [, drop] = useDrop(() => ({
-        accept: DragItemTypes.DOMINO,
-        drop: (item: { index: number }, monitor) => {
-            // if (props.board.Dominoes.length === 0) {
-            if (BoardIsEmpty(props.board)) {
-                props.onDropDomino(item, Direction.NONE);
-            }
-        },
-        collect: (monitor) => ({
-            // isOver: !!monitor.isOver(),
-            // canDrop: props.board.Dominoes.length === 0
-            // isDragging: (monitor as any).internalMonitor.isDragging()
-        })
-    }));
+    const [, drop] = useDrop(
+        () => ({
+            accept: DragItemTypes.DOMINO,
+            drop: (item: { index: number }, monitor) => {
+                // if (props.board.Dominoes.length === 0) {
+                if (BoardIsEmpty(props.board)) {
+                    props.onDropDomino(item, Direction.NONE);
+                }
+            },
+            collect: (monitor) => ({
+                // isOver: !!monitor.isOver(),
+                // canDrop: props.board.Dominoes.length === 0
+                // isDragging: (monitor as any).internalMonitor.isDragging()
+            })
+        }),
+        [props.board]
+    );
 
     if (!props.width || !props.height) {
         return null;
@@ -196,89 +199,100 @@ export const BoardView = observer((props: IProps) => {
     const finalBoard = gridDescription.board;
     const boardDominoes = FlattenRenderedBoard(finalBoard);
 
+    const getDropDirectionForDomino = (
+        board: RenderedBoard,
+        boardDomino: BoardDomino,
+        droppedDomino: Domino
+    ): Direction => {
+        if (!boardDomino) {
+            return Direction.NONE;
+        }
+
+        if (board.spinner) {
+            if (Equals(boardDomino.domino, board.spinner.domino)) {
+                if (HasFace(droppedDomino, board.spinner.domino.head)) {
+                    if (board.eastArm.length === 0) {
+                        return Direction.EAST;
+                    } else if (board.westArm.length === 0) {
+                        return Direction.WEST;
+                    } else if (CanPlayVertically(board)) {
+                        if (board.northArm.length === 0) {
+                            return Direction.NORTH;
+                        } else if (board.southArm.length === 0) {
+                            return Direction.SOUTH;
+                        }
+                    }
+                }
+            } else {
+                if (
+                    IsFurthestDominoInArm(board, boardDomino, Direction.EAST) &&
+                    HasFace(droppedDomino, _.last(board.eastArm).domino.tail)
+                ) {
+                    return Direction.EAST;
+                }
+                if (
+                    IsFurthestDominoInArm(board, boardDomino, Direction.WEST) &&
+                    HasFace(droppedDomino, _.last(board.westArm).domino.tail)
+                ) {
+                    return Direction.WEST;
+                }
+                if (
+                    CanPlayVertically(board) &&
+                    IsFurthestDominoInArm(
+                        board,
+                        boardDomino,
+                        Direction.NORTH
+                    ) &&
+                    HasFace(droppedDomino, _.last(board.northArm).domino.tail)
+                ) {
+                    return Direction.NORTH;
+                }
+                if (
+                    CanPlayVertically(board) &&
+                    IsFurthestDominoInArm(
+                        board,
+                        boardDomino,
+                        Direction.SOUTH
+                    ) &&
+                    HasFace(droppedDomino, _.last(board.southArm).domino.tail)
+                ) {
+                    return Direction.SOUTH;
+                }
+            }
+        } else {
+            if (
+                IsFurthestDominoInInitialRow(
+                    board,
+                    boardDomino,
+                    Direction.EAST
+                ) &&
+                HasFace(droppedDomino, _.last(board.initialRow).domino.tail)
+            ) {
+                return Direction.EAST;
+            } else if (
+                IsFurthestDominoInInitialRow(
+                    board,
+                    boardDomino,
+                    Direction.WEST
+                ) &&
+                HasFace(droppedDomino, _.first(board.initialRow).domino.head)
+            ) {
+                return Direction.WEST;
+            }
+        }
+        return null;
+    };
+
     const isDroppable = (board: RenderedBoard, domino: BoardDomino) => {
         if (!props.dominoBeingDragged) {
             return false;
         }
 
-        if (board.spinner) {
-            if (Equals(domino.domino, board.spinner.domino)) {
-                return HasFace(
-                    props.dominoBeingDragged,
-                    board.spinner.domino.head
-                );
-            } else {
-                if (
-                    IsFurthestDominoInArm(board, domino, Direction.EAST) &&
-                    HasFace(
-                        props.dominoBeingDragged,
-                        _.last(board.eastArm).domino.tail
-                    )
-                ) {
-                    return true;
-                }
-                if (
-                    IsFurthestDominoInArm(board, domino, Direction.WEST) &&
-                    HasFace(
-                        props.dominoBeingDragged,
-                        _.last(board.westArm).domino.tail
-                    )
-                ) {
-                    return true;
-                }
-                if (
-                    CanPlayVertically(board) &&
-                    IsFurthestDominoInArm(board, domino, Direction.NORTH) &&
-                    HasFace(
-                        props.dominoBeingDragged,
-                        _.last(board.northArm).domino.tail
-                    )
-                ) {
-                    return true;
-                }
-                if (
-                    CanPlayVertically(board) &&
-                    IsFurthestDominoInArm(board, domino, Direction.SOUTH) &&
-                    HasFace(
-                        props.dominoBeingDragged,
-                        _.last(board.southArm).domino.tail
-                    )
-                ) {
-                    return true;
-                }
-                return false;
-            }
-        } else {
-            return (
-                (IsFurthestDominoInInitialRow(board, domino, Direction.EAST) &&
-                    HasFace(
-                        props.dominoBeingDragged,
-                        _.last(board.eastArm).domino.tail
-                    )) ||
-                (IsFurthestDominoInInitialRow(board, domino, Direction.WEST) &&
-                    HasFace(
-                        props.dominoBeingDragged,
-                        _.last(board.westArm).domino.head
-                    ))
-            );
-        }
-    };
-
-    const determineDropDirectionForDomino = (
-        board: RenderedBoard,
-        domino: BoardDomino
-    ) => {
-        return GetNorthBoundary(board) === domino.boundingBox.north &&
-            CanPlayVertically(board)
-            ? Direction.NORTH
-            : GetSouthBoundary(board) === domino.boundingBox.south &&
-              CanPlayVertically(board)
-            ? Direction.SOUTH
-            : GetEastBoundary(board) === domino.boundingBox.east
-            ? Direction.EAST
-            : GetWestBoundary(board) === domino.boundingBox.west
-            ? Direction.WEST
-            : null;
+        return !!getDropDirectionForDomino(
+            board,
+            domino,
+            props.dominoBeingDragged
+        );
     };
 
     return (
@@ -305,9 +319,10 @@ export const BoardView = observer((props: IProps) => {
                         onDropDomino={(item: { index: number }) => {
                             props.onDropDomino(
                                 item,
-                                determineDropDirectionForDomino(
+                                getDropDirectionForDomino(
                                     finalBoard,
-                                    boardDomino
+                                    boardDomino,
+                                    props.dominoBeingDragged
                                 )
                             );
                         }}

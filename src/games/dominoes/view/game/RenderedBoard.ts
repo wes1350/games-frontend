@@ -470,7 +470,7 @@ const bendDominoAroundDomino = (
     );
     return {
         ...dominoToBend,
-        direction: rotateDirectionClockwise(direction),
+        direction: rotateDirectionClockwise(dominoToBend.direction),
         boundingBox: bendBoundingBoxAroundPoint(
             dominoToBend.boundingBox,
             coordinatesToBendAround.x,
