@@ -3,8 +3,6 @@ import "./BoardView.css";
 import { BoardDominoView } from "./BoardDominoView";
 import { observer } from "mobx-react-lite";
 import _ from "lodash";
-import { useDrop } from "react-dnd";
-import { DragItemTypes } from "games/dominoes/enums/DragItemTypes";
 import {
     BendDominoesOutsideOfGrid,
     CanPlayVertically,
@@ -33,6 +31,7 @@ import {
     Equals,
     HasFace
 } from "../../../../../games-common/src/games/dominoes/Domino";
+import { InitialBoardDropArea } from "./InitialBoardDropArea";
 
 interface IProps {
     board: Board;
@@ -43,24 +42,6 @@ interface IProps {
 }
 
 export const BoardView = observer((props: IProps) => {
-    const [, drop] = useDrop(
-        () => ({
-            accept: DragItemTypes.DOMINO,
-            drop: (item: { index: number }, monitor) => {
-                // if (props.board.Dominoes.length === 0) {
-                if (BoardIsEmpty(props.board)) {
-                    props.onDropDomino(item, Direction.NONE);
-                }
-            },
-            collect: (monitor) => ({
-                // isOver: !!monitor.isOver(),
-                // canDrop: props.board.Dominoes.length === 0
-                // isDragging: (monitor as any).internalMonitor.isDragging()
-            })
-        }),
-        [props.board]
-    );
-
     if (!props.width || !props.height) {
         return null;
     }
@@ -199,27 +180,31 @@ export const BoardView = observer((props: IProps) => {
     const finalBoard = gridDescription.board;
     const boardDominoes = FlattenRenderedBoard(finalBoard);
 
-    const getDropDirectionForDomino = (
+    const isDroppable = (
         board: RenderedBoard,
         boardDomino: BoardDomino,
         droppedDomino: Domino
-    ): Direction => {
+    ) => {
+        if (!droppedDomino) {
+            return false;
+        }
+
         if (!boardDomino) {
-            return Direction.NONE;
+            return false;
         }
 
         if (board.spinner) {
             if (Equals(boardDomino.domino, board.spinner.domino)) {
                 if (HasFace(droppedDomino, board.spinner.domino.head)) {
                     if (board.eastArm.length === 0) {
-                        return Direction.EAST;
+                        return true;
                     } else if (board.westArm.length === 0) {
-                        return Direction.WEST;
+                        return true;
                     } else if (CanPlayVertically(board)) {
                         if (board.northArm.length === 0) {
-                            return Direction.NORTH;
+                            return true;
                         } else if (board.southArm.length === 0) {
-                            return Direction.SOUTH;
+                            return true;
                         }
                     }
                 }
@@ -228,13 +213,13 @@ export const BoardView = observer((props: IProps) => {
                     IsFurthestDominoInArm(board, boardDomino, Direction.EAST) &&
                     HasFace(droppedDomino, _.last(board.eastArm).domino.tail)
                 ) {
-                    return Direction.EAST;
+                    return true;
                 }
                 if (
                     IsFurthestDominoInArm(board, boardDomino, Direction.WEST) &&
                     HasFace(droppedDomino, _.last(board.westArm).domino.tail)
                 ) {
-                    return Direction.WEST;
+                    return true;
                 }
                 if (
                     CanPlayVertically(board) &&
@@ -245,7 +230,7 @@ export const BoardView = observer((props: IProps) => {
                     ) &&
                     HasFace(droppedDomino, _.last(board.northArm).domino.tail)
                 ) {
-                    return Direction.NORTH;
+                    return true;
                 }
                 if (
                     CanPlayVertically(board) &&
@@ -256,7 +241,7 @@ export const BoardView = observer((props: IProps) => {
                     ) &&
                     HasFace(droppedDomino, _.last(board.southArm).domino.tail)
                 ) {
-                    return Direction.SOUTH;
+                    return true;
                 }
             }
         } else {
@@ -268,7 +253,7 @@ export const BoardView = observer((props: IProps) => {
                 ) &&
                 HasFace(droppedDomino, _.last(board.initialRow).domino.tail)
             ) {
-                return Direction.EAST;
+                return true;
             } else if (
                 IsFurthestDominoInInitialRow(
                     board,
@@ -277,28 +262,15 @@ export const BoardView = observer((props: IProps) => {
                 ) &&
                 HasFace(droppedDomino, _.first(board.initialRow).domino.head)
             ) {
-                return Direction.WEST;
+                return true;
             }
         }
-        return null;
-    };
-
-    const isDroppable = (board: RenderedBoard, domino: BoardDomino) => {
-        if (!props.dominoBeingDragged) {
-            return false;
-        }
-
-        return !!getDropDirectionForDomino(
-            board,
-            domino,
-            props.dominoBeingDragged
-        );
+        return false;
     };
 
     return (
         <div
             className="board"
-            ref={drop}
             style={{
                 width: props.width,
                 height: props.height,
@@ -306,6 +278,9 @@ export const BoardView = observer((props: IProps) => {
                 gridTemplateColumns: `repeat(${gridWidthInSquares}, ${gridSquarePixelSize}px)`
             }}
         >
+            {BoardIsEmpty(props.board) && (
+                <InitialBoardDropArea onDropDomino={props.onDropDomino} />
+            )}
             {boardDominoes.map((boardDomino, i) => {
                 return (
                     <BoardDominoView
@@ -316,17 +291,13 @@ export const BoardView = observer((props: IProps) => {
                             1
                         )(boardDomino)}
                         gridSize={gridSquarePixelSize}
-                        onDropDomino={(item: { index: number }) => {
-                            props.onDropDomino(
-                                item,
-                                getDropDirectionForDomino(
-                                    finalBoard,
-                                    boardDomino,
-                                    props.dominoBeingDragged
-                                )
-                            );
-                        }}
-                        highlight={isDroppable(finalBoard, boardDomino)}
+                        onDropDomino={props.onDropDomino}
+                        board={finalBoard}
+                        highlight={isDroppable(
+                            finalBoard,
+                            boardDomino,
+                            props.dominoBeingDragged
+                        )}
                     ></BoardDominoView>
                 );
             })}

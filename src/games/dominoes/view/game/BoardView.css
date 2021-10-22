@@ -10,3 +10,7 @@
     background-color: silver;
     box-shadow: 1px 2px 2px hsl(220deg 100% 0% / 0.333);
 }
+
+.initial-board-drop-area {
+    grid-area: 1 / 1 / last-line / last;
+}
