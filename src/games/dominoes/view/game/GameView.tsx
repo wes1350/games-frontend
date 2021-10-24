@@ -7,7 +7,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { observer, useLocalObservable } from "mobx-react-lite";
 import { action, runInAction } from "mobx";
-// import { GameEventRenderer } from "./GameEventRenderer";
+import { GameEventRenderer } from "./GameEventRenderer";
 import { GameOverDialog } from "./GameOverDialog";
 import { GameViewState } from "../GameViewState";
 import { QueryType } from "../../../../../games-common/src/games/dominoes/enums/QueryType";
@@ -115,17 +115,7 @@ export const GameView = observer((props: IProps) => {
                         })}
                     />
                 </div>
-                {/* <GameEventRenderer
-                    event={gameState.CurrentEvent}
-                    index={
-                        gameState.SeatToPositionMapping.get(
-                            gameState.CurrentEvent?.index
-                        ) ?? null
-                    }
-                    clearEvent={action(() => {
-                        gameState.ClearEvent();
-                    })}
-                /> */}
+                <GameEventRenderer gameViewState={props.gameViewState} />
                 {props.gameViewState.GameOver && (
                     <GameOverDialog
                         winner={props.gameViewState.Winner}

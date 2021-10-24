@@ -3,47 +3,41 @@ import { observer } from "mobx-react-lite";
 import "./GameEventRenderer.css";
 import { GameEvent } from "./interfaces/GameEvent";
 import { GameEventType } from "../../../../../games-common/src/games/dominoes/enums/GameEventType";
+import { GameViewState } from "../GameViewState";
 
 interface IProps {
-    event?: GameEvent;
-    index?: number;
-    clearEvent: () => void;
+    gameViewState: GameViewState;
 }
 
 export const GameEventRenderer = observer((props: IProps) => {
-    React.useEffect(() => {
-        if (props.event) {
-            setTimeout(() => {
-                props.clearEvent();
-            }, props.event.duration);
-        }
-    }, [props.event?.id]);
-
-    const gameEventClass =
-        props.index === null
+    const getGameEventClass = (index: number) => {
+        return index === null
             ? ""
-            : props.index === 0
+            : index === 0
             ? " game-event-me"
-            : ` game-event-opponent-${props.index}`;
+            : ` game-event-opponent-${index}`;
+    };
 
-    const eventType = props.event?.type;
-
-    const gameEventText =
-        eventType === GameEventType.SCORE
-            ? `+ ${props.event.score}`
-            : eventType === GameEventType.PASS
+    const getGameEventText = (event: GameEvent) => {
+        return event.type === GameEventType.SCORE
+            ? `+ ${event.score}`
+            : event.type === GameEventType.PASS
             ? "Pass"
-            : eventType === GameEventType.BLOCKED
+            : event.type === GameEventType.BLOCKED
             ? "Board blocked"
-            : props.event?.type;
+            : event.type;
+    };
 
     return (
         <div className="game-event-renderer">
-            {!!props.event && (
-                <div className={`game-event${gameEventClass}`}>
-                    {gameEventText}
+            {props.gameViewState.Events.map((event, i) => (
+                <div
+                    key={i}
+                    className={`game-event${getGameEventClass(event.index)}`}
+                >
+                    {getGameEventText(event)}
                 </div>
-            )}
+            ))}
         </div>
     );
 });
