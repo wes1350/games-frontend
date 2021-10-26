@@ -16,7 +16,11 @@ export class BackendGateway {
     }
 
     public static CreateRoom(): Promise<string> {
-        return WebUtils.POST(BackendGateway.url + "createRoom", undefined);
+        return WebUtils.POST(BackendGateway.url + "createRoom", undefined).then(
+            (res) => {
+                return res.id;
+            }
+        );
     }
 
     public static GetName(): Promise<string> {
