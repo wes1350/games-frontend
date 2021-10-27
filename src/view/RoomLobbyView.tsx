@@ -65,6 +65,11 @@ export const RoomLobbyView = observer((props: IProps) => {
         return null;
     }
 
+    // From https://stackoverflow.com/a/52033479
+    const copyRoomURL = () => {
+        navigator.clipboard.writeText(window.location.href);
+    };
+
     return (
         <div className="room-lobby">
             <div className="leave-room-button-container">
@@ -78,6 +83,10 @@ export const RoomLobbyView = observer((props: IProps) => {
                         onToggleVisibility(!props.roomDetails.private)
                     }
                 />
+            </div>
+            <div className="share-link">
+                <input readOnly={true} value={window.location.href} />
+                <button onClick={copyRoomURL}>Copy URL</button>
             </div>
             <div className="players-in-lobby-container">
                 <div className="players-in-lobby-container-label">
