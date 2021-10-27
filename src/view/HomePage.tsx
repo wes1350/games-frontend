@@ -42,7 +42,6 @@ export const HomePage = observer((props: IProps) => {
 
     const onCreateRoom = () => {
         BackendGateway.CreateRoom().then((res) => {
-            console.log(res);
             onEnterRoom(res);
         });
     };

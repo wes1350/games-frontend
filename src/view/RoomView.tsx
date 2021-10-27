@@ -19,6 +19,7 @@ import { RoomMessageType } from "../../games-common/src/enums/RoomMessageType";
 import { GameMessageType } from "../../games-common/src/games/dominoes/enums/GameMessageType";
 import { GameType } from "../../games-common/src/enums/GameType";
 import { GameStartMessagePayload } from "../../games-common/src/games/dominoes/interfaces/GameStartMessagePayload";
+import { RoomDetails } from "../../games-common/src/interfaces/RoomDetails";
 
 interface IProps {}
 
@@ -55,11 +56,11 @@ export const RoomView = observer((props: IProps) => {
     };
 
     const initializeLobby = () => {
-        joinRoom();
         setUpSocketForLobby();
+        joinRoom();
     };
 
-    const roomDetailsListener = action((roomDetails: { name: string }[]) => {
+    const roomDetailsListener = action((roomDetails: RoomDetails) => {
         localStore.roomDetails = roomDetails;
     });
 
@@ -109,6 +110,13 @@ export const RoomView = observer((props: IProps) => {
 
     if (!socket) {
         return null;
+    }
+
+    if (!localStore.roomDetails) {
+        // TODO: style this
+        return <div>loading room...</div>;
+    } else {
+        console.log(localStore.roomDetails);
     }
 
     const lobbyURL = `${match.url}/lobby`;

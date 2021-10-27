@@ -23,6 +23,16 @@ export class BackendGateway {
         );
     }
 
+    public static SetRoomVisibility(
+        roomId: string,
+        isPrivate: boolean
+    ): Promise<void> {
+        return WebUtils.POST(BackendGateway.url + "setRoomVisibility", {
+            roomId,
+            isPrivate
+        });
+    }
+
     public static GetName(): Promise<string> {
         return WebUtils.GET(BackendGateway.url + "getName").then((res) => {
             return res.name;

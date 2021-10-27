@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { observer } from "mobx-react-lite";
 // import { GameConfigDescription } from "interfaces/GameConfigDescription";
 // import { MessageType } from "enums/MessageType";
@@ -6,11 +6,13 @@ import "./RoomLobbyView.css";
 import { useHistory } from "react-router-dom";
 import { SocketContext } from "context/SocketContext";
 import { RoomMessageType } from "../../games-common/src/enums/RoomMessageType";
-// import { action } from "mobx";
+import { Checkbox } from "./components/Checkbox";
+import { BackendGateway } from "io/BackendGateway";
+import { RoomDetails } from "../../games-common/src/interfaces/RoomDetails";
 
 interface IProps {
     roomId: string;
-    roomDetails: { name: string }[];
+    roomDetails: RoomDetails;
     children: any; // type later
 }
 
@@ -55,6 +57,10 @@ export const RoomLobbyView = observer((props: IProps) => {
         history.push("/");
     };
 
+    const onToggleVisibility = (value: boolean) => {
+        BackendGateway.SetRoomVisibility(props.roomId, value);
+    };
+
     if (!socket) {
         return null;
     }
@@ -64,12 +70,21 @@ export const RoomLobbyView = observer((props: IProps) => {
             <div className="leave-room-button-container">
                 <button onClick={onLeaveRoom}>Leave Room</button>
             </div>
+            <div className="visibility-setting">
+                <Checkbox
+                    label="public"
+                    checked={!props.roomDetails.private}
+                    onCheck={() =>
+                        onToggleVisibility(!props.roomDetails.private)
+                    }
+                />
+            </div>
             <div className="players-in-lobby-container">
                 <div className="players-in-lobby-container-label">
                     Players in room:
                 </div>
                 <>
-                    {props.roomDetails?.map((playerDetails, i) => (
+                    {props.roomDetails?.players.map((playerDetails, i) => (
                         <div key={i} className="players-in-lobby-item">
                             {playerDetails.name}
                         </div>
