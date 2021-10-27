@@ -118,7 +118,7 @@ export const GameView = observer((props: IProps) => {
                 <GameEventRenderer gameViewState={props.gameViewState} />
                 {props.gameViewState.GameOver && (
                     <GameOverDialog
-                        winner={props.gameViewState.Winner}
+                        gameViewState={props.gameViewState}
                         onEnterLobby={props.onEnterLobby}
                     />
                 )}
