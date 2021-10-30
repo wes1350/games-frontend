@@ -55,6 +55,16 @@ export const RoomView = observer((props: IProps) => {
         socket.emit(RoomMessageType.JOIN_ROOM, roomId);
     };
 
+    const onLeaveRoom = (omitMessage?: boolean) => {
+        if (!omitMessage) {
+            socket.emit(RoomMessageType.LEAVE_ROOM, roomId, {
+                name: "username"
+            });
+        }
+
+        history.push("/");
+    };
+
     const initializeLobby = () => {
         setUpSocketForLobby();
         joinRoom();
@@ -64,8 +74,14 @@ export const RoomView = observer((props: IProps) => {
         localStore.roomDetails = roomDetails;
     });
 
+    const playerKickedListener = action(() => {
+        onLeaveRoom(true);
+    });
+
     const setUpSocketForLobby = () => {
         socket.on(RoomMessageType.ROOM_DETAILS, roomDetailsListener);
+
+        socket.on(RoomMessageType.PLAYER_KICKED, playerKickedListener);
 
         // Might need to add some sort of socket.offAll() in case of reconnects
         socket.once(
@@ -129,6 +145,7 @@ export const RoomView = observer((props: IProps) => {
                     <RoomLobbyView
                         roomId={roomId}
                         roomDetails={localStore.roomDetails}
+                        onLeaveRoom={onLeaveRoom}
                     >
                         <GameConfigurationView roomId={roomId} />
                     </RoomLobbyView>

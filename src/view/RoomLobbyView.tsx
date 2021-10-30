@@ -13,6 +13,7 @@ interface IProps {
     roomId: string;
     roomDetails: RoomDetails;
     children: any; // type later
+    onLeaveRoom: () => void;
 }
 
 export const RoomLobbyView = observer((props: IProps) => {
@@ -49,13 +50,6 @@ export const RoomLobbyView = observer((props: IProps) => {
     //     localStore.check5Doubles = e.currentTarget.checked;
     //   });
 
-    const onLeaveRoom = () => {
-        socket.emit(RoomMessageType.LEAVE_ROOM, props.roomId, {
-            name: "username"
-        });
-        history.push("/");
-    };
-
     const onToggleVisibility = (value: boolean) => {
         socket.emit(RoomMessageType.CHANGE_VISIBILITY, props.roomId, value);
     };
@@ -69,12 +63,18 @@ export const RoomLobbyView = observer((props: IProps) => {
         navigator.clipboard.writeText(window.location.href);
     };
 
+    const kickPlayer = (id: string) => {
+        socket.emit(RoomMessageType.KICK_PLAYER, props.roomId, id);
+    };
+
+    const isOwner = props.roomDetails.owner === socket.id;
+
     return (
         <div className="room-lobby">
             <div className="leave-room-button-container">
-                <button onClick={onLeaveRoom}>Leave Room</button>
+                <button onClick={props.onLeaveRoom}>Leave Room</button>
             </div>
-            {props.roomDetails.owner === socket.id && (
+            {isOwner && (
                 <div className="visibility-setting">
                     <Checkbox
                         label="public"
@@ -96,7 +96,14 @@ export const RoomLobbyView = observer((props: IProps) => {
                 <>
                     {props.roomDetails?.players.map((playerDetails, i) => (
                         <div key={i} className="players-in-lobby-item">
-                            {playerDetails.name}
+                            <span>{playerDetails.name}</span>
+                            {isOwner && socket.id !== playerDetails.id && (
+                                <button
+                                    onClick={() => kickPlayer(playerDetails.id)}
+                                >
+                                    Kick player
+                                </button>
+                            )}
                         </div>
                     ))}
                 </>
