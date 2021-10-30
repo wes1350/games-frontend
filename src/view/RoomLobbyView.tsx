@@ -7,7 +7,6 @@ import { useHistory } from "react-router-dom";
 import { SocketContext } from "context/SocketContext";
 import { RoomMessageType } from "../../games-common/src/enums/RoomMessageType";
 import { Checkbox } from "./components/Checkbox";
-import { BackendGateway } from "io/BackendGateway";
 import { RoomDetails } from "../../games-common/src/interfaces/RoomDetails";
 
 interface IProps {
@@ -58,7 +57,7 @@ export const RoomLobbyView = observer((props: IProps) => {
     };
 
     const onToggleVisibility = (value: boolean) => {
-        BackendGateway.SetRoomVisibility(props.roomId, value);
+        socket.emit(RoomMessageType.CHANGE_VISIBILITY, props.roomId, value);
     };
 
     if (!socket) {
@@ -75,15 +74,17 @@ export const RoomLobbyView = observer((props: IProps) => {
             <div className="leave-room-button-container">
                 <button onClick={onLeaveRoom}>Leave Room</button>
             </div>
-            <div className="visibility-setting">
-                <Checkbox
-                    label="public"
-                    checked={!props.roomDetails.private}
-                    onCheck={() =>
-                        onToggleVisibility(!props.roomDetails.private)
-                    }
-                />
-            </div>
+            {props.roomDetails.owner === socket.id && (
+                <div className="visibility-setting">
+                    <Checkbox
+                        label="public"
+                        checked={!props.roomDetails.private}
+                        onCheck={() =>
+                            onToggleVisibility(!props.roomDetails.private)
+                        }
+                    />
+                </div>
+            )}
             <div className="share-link">
                 <input readOnly={true} value={window.location.href} />
                 <button onClick={copyRoomURL}>Copy URL</button>
