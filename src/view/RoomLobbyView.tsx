@@ -1,9 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { observer } from "mobx-react-lite";
 // import { GameConfigDescription } from "interfaces/GameConfigDescription";
 // import { MessageType } from "enums/MessageType";
 import "./RoomLobbyView.css";
-import { useHistory } from "react-router-dom";
 import { SocketContext } from "context/SocketContext";
 import { RoomMessageType } from "../../games-common/src/enums/RoomMessageType";
 import { Checkbox } from "./components/Checkbox";
@@ -22,8 +21,6 @@ export const RoomLobbyView = observer((props: IProps) => {
     //     check5Doubles: "Yes",
     //     winThreshold: "150",
     //   }));
-
-    const history = useHistory();
 
     const socket = useContext(SocketContext)?.socket;
 
@@ -52,6 +49,10 @@ export const RoomLobbyView = observer((props: IProps) => {
 
     const onToggleVisibility = (value: boolean) => {
         socket.emit(RoomMessageType.CHANGE_VISIBILITY, props.roomId, value);
+    };
+
+    const onToggleReadyStatus = (value: boolean) => {
+        socket.emit(RoomMessageType.SET_READY_STATUS, props.roomId, value);
     };
 
     if (!socket) {
@@ -85,6 +86,23 @@ export const RoomLobbyView = observer((props: IProps) => {
                     />
                 </div>
             )}
+            <div className="ready-setting">
+                <Checkbox
+                    label="ready"
+                    checked={
+                        props.roomDetails.players.find(
+                            (player) => player.id === socket.id
+                        ).ready
+                    }
+                    onCheck={() =>
+                        onToggleReadyStatus(
+                            !props.roomDetails.players.find(
+                                (player) => player.id === socket.id
+                            ).ready
+                        )
+                    }
+                />
+            </div>
             <div className="share-link">
                 <input readOnly={true} value={window.location.href} />
                 <button onClick={copyRoomURL}>Copy URL</button>
